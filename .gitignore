@@ -1,0 +1,7 @@
+/beego_api
+/lastupdate.tmp
+/*.tmp
+.idea
+data
+vendor
+deploy/beego_api
