@@ -23,7 +23,7 @@ type LoginToken struct {
 	Token string           `json:"token"`
 }
 
-// @Title 注册新用户
+// @Summary 注册新用户
 // @Description 用户注册
 // @Param	username	formData 	string	true		"用户昵称"
 // @Param	password	formData 	string	true		"密码"
@@ -54,7 +54,7 @@ func (this *UserController) ApiRegister() {
 
 }
 
-// @Title 登录
+// @Summary 登录
 // @Description 账号登录接口
 // @Param	username	formData 	string	true		"用户昵称"
 // @Param	password	formData 	string	true		"密码"
@@ -95,7 +95,7 @@ func (this *UserController) ApiLogin() {
 
 }
 
-// @Title 认证测试
+// @Summary 认证测试
 // @Description 测试错误码
 // @Success 200 {string}
 // @Failure 401 unauthorized
@@ -112,4 +112,88 @@ func (this *UserController) ApiAuth() {
 	}
 	this.WriteJson(Response{0, "success.", "is login"})
 
+}
+
+// @Summary 用户列表
+// @Description 用户列表
+// @Param	page	query 	string	true		"page"
+// @Param	page_size	query 	string	true		"page_size"
+// @Success 200 {string}
+// @Failure 401 No Admin
+// @router /user_list [get]
+func (this *UserController) ApiUserList() {
+
+	page, _ := this.GetInt("page")
+	page_size, _ := this.GetInt("page_size")
+	this.GetLogger().Msg("this is a message with trace id")
+	var users [] models.StaffUser
+	models.Users().Limit(page_size, (page-1)*page_size).All(&users)
+	count, _ := models.Users().Count()
+
+	this.WriteJson(ResponseList{0, "success.", count, users})
+}
+
+// @Summary 用户组列表
+// @Description 用户组列表用户组列表用户组列表
+// @Param	page	query 	string	true		"page"
+// @Param	page_size	query 	string	true		"page_size"
+// @Success 200 {string}
+// @Failure 401 No Admin
+// @router /group_list [get]
+func (this *UserController) ApiGroupList() {
+
+	page, _ := this.GetInt("page")
+	page_size, _ := this.GetInt("page_size")
+	this.GetLogger().Msg("this is a message with trace id")
+	var groups [] models.Group
+	models.Groups().Limit(page_size, (page-1)*page_size).All(&groups)
+	count, _ := models.Groups().Count()
+
+	this.WriteJson(ResponseList{0, "success.", count, groups})
+}
+
+// @Summary 新建用户组
+// @Description 新建用户组
+// @Param	page	query 	string	true		"page"
+// @Param	page_size	query 	string	true		"page_size"
+// @Success 200 {string}
+// @Failure 401 No Admin
+// @router /usergroup [post]
+func (this *UserController) ApiCreateOrUpdateGroup() {
+
+	var group models.Group
+	err := this.GetJson(&group)
+	if err != nil {
+		this.WriteJsonWithCode(403, err.Error())
+		return
+	}
+	id, err := models.OrmManager().InsertOrUpdate(&group)
+	if err != nil {
+		this.WriteJsonWithCode(403, err.Error())
+		return
+	}
+
+	this.WriteJson(Response{0, "success.", id})
+}
+
+// @Summary 删除用户组
+// @Description 删除用户组
+// @Param	groupname	query 	string	true		"groupname"
+// @Success 200 {string}
+// @Failure 401 No Admin
+// @router /usergroup [delete]
+func (this *UserController) ApiDeleteGroup() {
+
+	var group models.Group
+	groupname := this.GetString("groupname")
+
+	group = models.Group{GroupName: groupname}
+	id, err := models.OrmManager().Delete(&group)
+
+	if err != nil {
+		this.WriteJsonWithCode(403, err.Error())
+		return
+	}
+
+	this.WriteJson(Response{0, "success.", id})
 }

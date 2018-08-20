@@ -47,7 +47,7 @@
         </div>
         <hr class="layui-bg-orange">
         <div class="gap_top">
-            <a class="layui-btn layui-btn-normal login_btn" href="/user/register.html">注册</a>
+            <a class="layui-btn layui-btn-normal login_btn" href="/view/user/register.html">注册</a>
         </div>
 
     </form>
@@ -65,7 +65,7 @@
         form.on("submit(login)", function (data) {
 
             $.ajax({
-                url: "/user/login",
+                url: "/api/user/login",
                 type: "POST",
                 contentType: 'application/json',
                 data: JSON.stringify(data.field),

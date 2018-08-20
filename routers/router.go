@@ -13,7 +13,7 @@ import (
 func init() {
 	beego.Router("/", &default_service.DefaultController{}, "*:ApiGetAll")
 	beego.Router("/view/:dir([\\w]+)/:html([\\w]+).html", &default_service.DefaultController{}, "*:Html")
-	ns := beego.NewNamespace("/v1",
+	ns := beego.NewNamespace("/api",
 		beego.NSNamespace("/user",
 			beego.NSInclude(
 				&user_service.UserController{},

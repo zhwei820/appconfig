@@ -54,13 +54,20 @@ func (this *BaseController) WriteJsonWithCode(code int, jsonData interface{}) {
 
 //Response 结构体
 type Response struct {
-	Errcode int         `json:"errcode"`
-	Errmsg  string      `json:"errmsg"`
+	Errcode int         `json:"code"`
+	Errmsg  string      `json:"msg"`
+	Data    interface{} `json:"data"`
+}
+
+type ResponseList struct {
+	Errcode int         `json:"code"`
+	Errmsg  string      `json:"msg"`
+	Count   int64       `json:"count"`
 	Data    interface{} `json:"data"`
 }
 
 //Response 结构体
 type ErrResponse struct {
-	Errcode int         `json:"errcode"`
-	Errmsg  interface{} `json:"errmsg"`
+	Errcode int         `json:"code"`
+	Errmsg  interface{} `json:"msg"`
 }

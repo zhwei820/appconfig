@@ -2,14 +2,14 @@ swagger: "2.0"
 info:
   description: beego Test API
   version: 1.0.0
-basePath: /v1
+basePath: /api
 paths:
   /user/auth:
     get:
       tags:
       - user
+      summary: 认证测试
       description: 测试错误码
-      operationId: UserController.认证测试
       responses:
         "200":
           description: '{string}'
@@ -17,12 +17,34 @@ paths:
           description: unauthorized
       security:
       - jwt: []
+  /user/group_list:
+    get:
+      tags:
+      - user
+      summary: 用户组列表
+      description: 用户组列表用户组列表用户组列表
+      parameters:
+      - in: query
+        name: page
+        description: page
+        required: true
+        type: string
+      - in: query
+        name: page_size
+        description: page_size
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{string}'
+        "401":
+          description: No Admin
   /user/login:
     post:
       tags:
       - user
+      summary: 登录
       description: 账号登录接口
-      operationId: UserController.登录
       parameters:
       - in: formData
         name: username
@@ -43,8 +65,8 @@ paths:
     post:
       tags:
       - user
+      summary: 注册新用户
       description: 用户注册
-      operationId: UserController.注册新用户
       parameters:
       - in: formData
         name: username
@@ -63,6 +85,66 @@ paths:
             $ref: '#/definitions/models.StaffUser'
         "403":
           description: 参数错误：缺失或格式错误
+  /user/user_list:
+    get:
+      tags:
+      - user
+      summary: 用户列表
+      description: 用户列表
+      parameters:
+      - in: query
+        name: page
+        description: page
+        required: true
+        type: string
+      - in: query
+        name: page_size
+        description: page_size
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{string}'
+        "401":
+          description: No Admin
+  /user/usergroup:
+    post:
+      tags:
+      - user
+      summary: 新建用户组
+      description: 新建用户组
+      parameters:
+      - in: query
+        name: page
+        description: page
+        required: true
+        type: string
+      - in: query
+        name: page_size
+        description: page_size
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{string}'
+        "401":
+          description: No Admin
+    delete:
+      tags:
+      - user
+      summary: 删除用户组
+      description: 删除用户组
+      parameters:
+      - in: query
+        name: groupname
+        description: groupname
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{string}'
+        "401":
+          description: No Admin
 definitions:
   models.StaffUser:
     title: StaffUser

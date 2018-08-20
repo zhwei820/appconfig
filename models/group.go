@@ -6,11 +6,12 @@ import (
 )
 
 type Group struct {
-	Id        int64     `json:"id" orm:"column(id);pk;auto;unique"`
-	GroupName string    `json:"group_name" orm:"column(group_name);unique;size(100)"`
-	Perms     string    `json:"perms" orm:"column(perms);size(500)"`
-	Created   time.Time `json:"create_at" orm:"column(create_at);auto_now_add;type(datetime)"`
-	Updated   time.Time `json:"-" orm:"column(update_at);auto_now;type(datetime)"`
+	Id         int64     `json:"id" orm:"column(id);pk;auto;unique"`
+	GroupName  string    `json:"groupname" orm:"column(groupname);unique;size(100)"`
+	Group      string    `json:"group" orm:"column(group);unique;size(100)"`
+	Permission string    `json:"permission" orm:"column(permission);size(500)"`
+	Created    time.Time `json:"create_at" orm:"column(create_at);auto_now_add;type(datetime)"`
+	Updated    time.Time `json:"-" orm:"column(update_at);auto_now;type(datetime)"`
 }
 
 // 多字段索引

@@ -47,7 +47,7 @@
         form.on("submit(login)", function (data) {
 
             $.ajax({
-                url: "/user/add_user",
+                url: "/api/user/add_user",
                 type: "POST",
                 contentType: 'application/json',
                 data: JSON.stringify(data.field),

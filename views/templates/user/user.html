@@ -45,8 +45,8 @@
 
     <div class="layui-tab layui-tab-brief">
         <ul class="layui-tab-title">
-            <li class="layui-this"><a href="/user/user.html">用户管理</a></li>
-            <li><a href="/user/usergroup.html">分组管理</a></li>
+            <li class="layui-this"><a href="/view/user/user.html">用户管理</a></li>
+            <li><a href="/view/user/usergroup.html">分组管理</a></li>
 
         </ul>
         <div class="layui-tab-content"></div>
@@ -55,7 +55,7 @@
 
     <h1 class="site-h1">用户管理 </h1>
 
-    <table class="layui-table" lay-data="{ height: 'full', url:'/user/user_list', page:true, id:'idTest'}"
+    <table class="layui-table" lay-data="{ height: 'full', url:'/api/user/user_list', page:true, id:'idTest'}"
            lay-filter="demo">
         <thead>
         <tr>
@@ -86,7 +86,7 @@
 
         function get_user_group_list() {
             $.ajax({
-                url: "/user/group_list?",
+                url: "/api/user/group_list?",
                 type: 'GET',
 //                contentType: 'text/html',
 //                data: JSON.stringify({}),
@@ -131,7 +131,7 @@
 
         function del_item(data) {
             $.ajax({
-                url: "/user/del_user?username=" + data['username'],
+                url: "/api/user/del_user?username=" + data['username'],
                 type: 'DELETE',
                 contentType: 'application/json',
                 data: JSON.stringify({}),
@@ -179,7 +179,7 @@
         form.on('submit(demo1)', function (data) {
 
             $.ajax({
-                url: "/user/modify_user_admin",
+                url: "/api/user/modify_user_admin",
                 type: "POST",
                 contentType: 'application/json',
                 data: JSON.stringify(data.field),

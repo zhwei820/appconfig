@@ -1,7 +1,3 @@
-{% extends 'base/userinfo.html' %}
-
-
-{% block head %}
 <meta charset="utf-8">
 <title>用户组管理 管理界面</title>
 <meta name="renderer" content="webkit">
@@ -24,10 +20,6 @@
     }
 
 </style>
-
-{% endblock %}
-
-{% block body %}
 
 
 <div id="box" style="display: none">
@@ -79,8 +71,8 @@
 
     <div class="layui-tab layui-tab-brief">
         <ul class="layui-tab-title">
-            <li><a href="/user/user.html">用户管理</a></li>
-            <li class="layui-this"><a href="/user/usergroup.html">分组管理</a></li>
+            <li><a href="/view/user/user.html">用户管理</a></li>
+            <li class="layui-this"><a href="/view/user/usergroup.html">分组管理</a></li>
 
         </ul>
         <div class="layui-tab-content"></div>
@@ -90,7 +82,7 @@
     <h1 class="site-h1">分组管理 </h1>
     <button id="create_item" class="layui-btn">新建分组</button>
 
-    <table class="layui-table" lay-data="{ height: 'full', url:'/user/group_list', page:true, id:'idTest'}"
+    <table class="layui-table" lay-data="{ height: 'full', url:'/api/user/group_list', page:true, id:'idTest'}"
            lay-filter="demo">
         <thead>
         <tr>
@@ -127,7 +119,7 @@
         //监听工具条
         table.on('tool(demo)', function (obj) {
             if (obj.event === 'del') {
-                layer.confirm("确认删除用户", {
+                layer.confirm("确认删除分组", {
                     btn: ['确认', '取消']
                     , btn3: function (index, layero) {
 
@@ -143,9 +135,10 @@
                 edit_item(obj.data)
             }
         });
+
         function del_item(data) {
             $.ajax({
-                url: "/user/del_usergroup?username=" + data['username'],
+                url: "/api/user/usergroup?groupname=" + data['groupname'],
                 type: 'DELETE',
                 contentType: 'application/json',
                 data: JSON.stringify({}),
@@ -172,6 +165,11 @@
                 shadeClose: true,           // 为 true 时点击遮罩关闭 [可选]
             });
             render_form($("#item-form"), data)
+            data.permission = data.permission.split(',')
+            for (var ii = 0; ii < data.permission.length; ii++) {
+                $("#item-form").find('input[name="' + 'permission' + '"][type=checkbox][value=' + data.permission[ii] + ']').attr('checked', true);
+            }
+
             form.render()
         }
 
@@ -196,9 +194,10 @@
             $('input:checkbox:checked[name="permission"]').each(function () {
                 data.field.permission.push($(this).val());
             });
+            data.field.permission = data.field.permission.join(',')
 
             $.ajax({
-                url: "/user/usergroup",
+                url: "/api/user/usergroup",
                 type: "POST",
                 contentType: 'application/json',
                 data: JSON.stringify(data.field),
@@ -229,17 +228,16 @@
 
     function render_form($form, row) {
         if (!row) {
-            $form.find('input:not(checkbox)').val("");
+            $form.find('input[type!=checkbox]').val("");
             $form.find('select').val("");
             $form.find('textarea').val("");
             return
         }
         for (var name in row) {
-            $form.find('input[name="' + name + '"]:not(checkbox)').val(row[name]);
+            $form.find('input[name="' + name + '"][type!=checkbox]').val(row[name]);
             $form.find('select[name="' + name + '"]').val(row[name]);
             $form.find('textarea[name="' + name + '"]').val(row[name]);
         }
 
     }
 </script>
-{% endblock %}
