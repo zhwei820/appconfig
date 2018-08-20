@@ -7,30 +7,6 @@
     },
     "basePath": "/v1",
     "paths": {
-        "/test/": {
-            "post": {
-                "tags": [
-                    "test"
-                ],
-                "description": "PostTest",
-                "operationId": "TestController.PostTest",
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "用户信息",
-                        "schema": {
-                            "$ref": "#/definitions/default_service.User"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{string}"
-                    }
-                }
-            }
-        },
         "/user/auth": {
             "get": {
                 "tags": [
@@ -96,13 +72,6 @@
                 "parameters": [
                     {
                         "in": "formData",
-                        "name": "phone",
-                        "description": "用户手机号",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "formData",
                         "name": "username",
                         "description": "用户昵称",
                         "required": true,
@@ -131,76 +100,20 @@
         }
     },
     "definitions": {
-        "default_service.Address": {
-            "title": "Address",
-            "type": "object",
-            "properties": {
-                "City": {
-                    "type": "string"
-                },
-                "Phone": {
-                    "type": "string"
-                },
-                "Planet": {
-                    "type": "string"
-                },
-                "Street": {
-                    "type": "string"
-                }
-            }
-        },
-        "default_service.User": {
-            "title": "User",
-            "type": "object",
-            "properties": {
-                "Addresses": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/default_service.Address"
-                    }
-                },
-                "Age": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "Email": {
-                    "type": "string"
-                },
-                "IP": {
-                    "type": "string"
-                },
-                "Id": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "Mobile": {
-                    "type": "string"
-                },
-                "Name": {
-                    "type": "string"
-                }
-            }
-        },
         "models.StaffUser": {
             "title": "StaffUser",
             "type": "object",
             "properties": {
-                "city": {
-                    "type": "string"
-                },
                 "create_at": {
                     "type": "string",
                     "format": "datetime"
                 },
-                "email": {
+                "group": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer",
                     "format": "int64"
-                },
-                "phone": {
-                    "type": "string"
                 },
                 "username": {
                     "type": "string"

@@ -7,8 +7,6 @@ import (
 	"back/appconfig/utils/define"
 
 	_ "back/appconfig/routers"
-	"back/appconfig/services/base_service"
-
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/orm"
@@ -33,18 +31,22 @@ func init() {
 }
 
 func main() {
+
 	defer func() {
 		destroy()
 	}()
 	logTest()
 	debug, _ := beego.AppConfig.Bool("debug")
+
+	beego.BConfig.WebConfig.StaticDir["/asset"] = "./views/templates"
+
 	if debug {
 		beego.BConfig.WebConfig.DirectoryIndex = true
 		beego.BConfig.WebConfig.StaticDir["/swagger"] = "./swagger"
 		orm.Debug = true
 	}
 	orm.DefaultTimeLoc = time.UTC
-	beego.ErrorController(&base_service.ErrorController{})
+	//beego.ErrorController(&base_service.ErrorController{})
 	beego.BConfig.ServerName = "snail server 1.0"
 
 	beego.Run()

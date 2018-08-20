@@ -7,7 +7,6 @@ import (
 
 	"strings"
 	. "back/appconfig/services/base_service"
-	"back/appconfig/services/default_service"
 )
 
 var (
@@ -26,7 +25,6 @@ type LoginToken struct {
 
 // @Title 注册新用户
 // @Description 用户注册
-// @Param	phone		formData 	string	true 		"用户手机号"
 // @Param	username	formData 	string	true		"用户昵称"
 // @Param	password	formData 	string	true		"密码"
 // @Success 200 {object} models.StaffUser
@@ -34,19 +32,14 @@ type LoginToken struct {
 // @Faulure 422 已被注册
 // @router /reg [post]
 func (this *UserController) ApiRegister() {
-	phone := this.GetString("phone")
 	username := this.GetString("username")
 	password := this.GetString("password")
 	//code := this.GetString("code")
 
-	if this.validateRegister(phone, username, password, "") != nil {
+	if this.validateRegister(username, password, "") != nil {
 		return
 	}
 
-	if models.CheckUserPhone(phone) {
-		this.WriteJsonWithCode(403, ErrPhoneIsRegis)
-		return
-	}
 	if models.CheckUserUsername(username) {
 		this.WriteJsonWithCode(403, ErrUsernameIsRegis)
 		return
@@ -54,7 +47,6 @@ func (this *UserController) ApiRegister() {
 
 	password = utils.TransPassword(password) // 存储密码hash值
 	user := models.StaffUser{
-		Phone:    phone,
 		Username: username,
 		Password: password,
 	}
@@ -70,8 +62,8 @@ func (this *UserController) ApiRegister() {
 // @Failure 401 No Admin
 // @router /login [post]
 func (this *UserController) ApiLogin() {
-	defaultController := default_service.DefaultController{this.BaseController}
-	defaultController.GetAllPublic()
+	//defaultController := default_service.DefaultController{this.BaseController}  // other controller
+	//defaultController.GetAllPublic()
 
 	this.loginTest() // 测试登陆日志
 	this.LoginTest() // 测试登陆日志

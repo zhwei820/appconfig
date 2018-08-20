@@ -20,10 +20,10 @@ func init() {
 
 func makeLogDir(fname string) {
 	sl := strings.Split(fname, "/")
-	path := filepath.Join(sl[0:len(sl)-1]...)
+	path := filepath.Join(sl[0 : len(sl)-1]...)
 	err := os.MkdirAll(path, 0777)
 	if err != nil {
-		logs.Error("mkdir error; %v", err)
+		logs.Error("mkdir error; %v; %v", path, err)
 	}
 
 }

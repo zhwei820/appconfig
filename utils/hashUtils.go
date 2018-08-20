@@ -1,13 +1,13 @@
 package utils
 
 import (
-
 	"crypto/sha256"
 
 	"encoding/base64"
 	"fmt"
 	"github.com/astaxie/beego"
 )
+
 //
 //func Sha1(input string) string {
 //	if input == "" {
@@ -23,7 +23,7 @@ func Sha256(s string) string {
 }
 
 func TransPassword(password string) string {
-	return Sha256(password + beego.AppConfig.String("jwt::secret"))
+	return Sha256(password + beego.AppConfig.String("jwt_secret"))
 }
 
 func Base64(input string) string {
