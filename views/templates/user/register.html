@@ -40,31 +40,29 @@
 
     layui.use(['form', 'layer'], function () {
         var form = layui.form,
-            layer = parent.layer === undefined ? layui.layer : parent.layer,
-            $ = layui.jquery;
+                layer = parent.layer === undefined ? layui.layer : parent.layer,
+                $ = layui.jquery;
 
         //登录按钮事件
         form.on("submit(login)", function (data) {
 
             $.ajax({
-                url: "/api/user/add_user",
+                url: "/api/user/reg",
                 type: "POST",
-                contentType: 'application/json',
-                data: JSON.stringify(data.field),
+                // contentType: 'multipart/form',
+                data: data.field,
                 success: function (_data) {
                     console.log(_data)
-                    if (_data.code != 0) {
-                        layer.alert('请求失败!<br>' + _data.message, {
-                            icon: 2,
-                            skin: 'layer-ext-moon'
-                        })
-                        return false
 
-                    }
-                    location.href = "/user/login.html"
+                    location.href = "/view/user/login.html"
                 },
                 error: function (xhr, type) {
-                    layer.msg("请求失败");
+                    var _data = JSON.parse(xhr.responseText)
+                    layer.alert('请求失败!<br>' + _data.msg, {
+                        icon: 2,
+                        skin: 'layer-ext-moon'
+                    })
+
                 }
             })
 

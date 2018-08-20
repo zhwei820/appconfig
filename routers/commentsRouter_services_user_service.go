@@ -41,6 +41,14 @@ func init() {
 
 	beego.GlobalControllerRouter["back/appconfig/services/user_service:UserController"] = append(beego.GlobalControllerRouter["back/appconfig/services/user_service:UserController"],
 		beego.ControllerComments{
+			Method: "ApiDeleteUser",
+			Router: `/user`,
+			AllowHTTPMethods: []string{"delete"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["back/appconfig/services/user_service:UserController"] = append(beego.GlobalControllerRouter["back/appconfig/services/user_service:UserController"],
+		beego.ControllerComments{
 			Method: "ApiUserList",
 			Router: `/user_list`,
 			AllowHTTPMethods: []string{"get"},

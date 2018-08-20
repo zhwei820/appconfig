@@ -131,7 +131,7 @@
 
         function del_item(data) {
             $.ajax({
-                url: "/api/user/del_user?username=" + data['username'],
+                url: "/api/user/user?username=" + data['username'],
                 type: 'DELETE',
                 contentType: 'application/json',
                 data: JSON.stringify({}),

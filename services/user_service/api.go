@@ -34,7 +34,6 @@ type LoginToken struct {
 func (this *UserController) ApiRegister() {
 	username := this.GetString("username")
 	password := this.GetString("password")
-	//code := this.GetString("code")
 
 	if this.validateRegister(username, password, "") != nil {
 		return
@@ -52,6 +51,28 @@ func (this *UserController) ApiRegister() {
 	}
 	this.WriteJson(Response{0, "success.", models.CreateUser(user)})
 
+}
+
+// @Summary 删除用户
+// @Description 删除用户
+// @Param	username	formData 	string	true		"用户昵称"
+// @Success 200 {object} models.StaffUser
+// @Failure 403 参数错误：缺失或格式错误
+// @Faulure 422 已被注册
+// @router /user [delete]
+func (this *UserController) ApiDeleteUser() {
+	var user models.StaffUser
+	username := this.GetString("username")
+
+	user = models.StaffUser{Username: username}
+	id, err := models.OrmManager().Delete(&user)
+
+	if err != nil {
+		this.WriteJsonWithCode(403, err.Error())
+		return
+	}
+
+	this.WriteJson(Response{0, "success.", id})
 }
 
 // @Summary 登录
@@ -79,19 +100,8 @@ func (this *UserController) ApiLogin() {
 		return
 	}
 
-	et := utils.EasyToken{
-		Username: user.Username,
-		Uid:      user.Id,
-		Expires:  utils.GetExpireTime(),
-	}
-
-	token, err := et.GetToken()
-	if token == "" || err != nil {
-		this.WriteJson(ErrResponse{0, err})
-	} else {
-		this.SetSession("uid", user.Id)
-		this.WriteJson(Response{0, "success.", LoginToken{user, token}})
-	}
+	this.SetSession("uid", user.Id)
+	this.Redirect("/view/admin/index2.html", 302)
 
 }
 

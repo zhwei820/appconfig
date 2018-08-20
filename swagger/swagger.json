@@ -131,6 +131,35 @@
                 }
             }
         },
+        "/user/user": {
+            "delete": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "删除用户",
+                "description": "删除用户",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "description": "用户昵称",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.StaffUser"
+                        }
+                    },
+                    "403": {
+                        "description": "参数错误：缺失或格式错误"
+                    }
+                }
+            }
+        },
         "/user/user_list": {
             "get": {
                 "tags": [
