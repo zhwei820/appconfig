@@ -53,6 +53,30 @@ func (this *UserController) ApiRegister() {
 
 }
 
+// @Summary 更新用户
+// @Description 更新用户
+// @Param   body  body models.StaffUser 用户信息
+// @Success 200 {object} models.StaffUser
+// @Failure 403 参数错误：缺失或格式错误
+// @Faulure 422 已被注册
+// @router /user [put]
+func (this *UserController) ApiUpdateUser() {
+
+	var user models.StaffUser
+	err := this.GetJson(&user)
+	if err != nil {
+		this.WriteJsonWithCode(403, err.Error())
+		return
+	}
+	id, err := models.OrmManager().InsertOrUpdate(&user)
+	if err != nil {
+		this.WriteJsonWithCode(403, err.Error())
+		return
+	}
+
+	this.WriteJson(Response{0, "success.", id})
+}
+
 // @Summary 删除用户
 // @Description 删除用户
 // @Param	username	formData 	string	true		"用户昵称"
@@ -141,69 +165,4 @@ func (this *UserController) ApiUserList() {
 	count, _ := models.Users().Count()
 
 	this.WriteJson(ResponseList{0, "success.", count, users})
-}
-
-// @Summary 用户组列表
-// @Description 用户组列表用户组列表用户组列表
-// @Param	page	query 	string	true		"page"
-// @Param	page_size	query 	string	true		"page_size"
-// @Success 200 {string}
-// @Failure 401 No Admin
-// @router /group_list [get]
-func (this *UserController) ApiGroupList() {
-
-	page, _ := this.GetInt("page")
-	page_size, _ := this.GetInt("page_size")
-	this.GetLogger().Msg("this is a message with trace id")
-	var groups [] models.Group
-	models.Groups().Limit(page_size, (page-1)*page_size).All(&groups)
-	count, _ := models.Groups().Count()
-
-	this.WriteJson(ResponseList{0, "success.", count, groups})
-}
-
-// @Summary 新建用户组
-// @Description 新建用户组
-// @Param	page	query 	string	true		"page"
-// @Param	page_size	query 	string	true		"page_size"
-// @Success 200 {string}
-// @Failure 401 No Admin
-// @router /usergroup [post]
-func (this *UserController) ApiCreateOrUpdateGroup() {
-
-	var group models.Group
-	err := this.GetJson(&group)
-	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
-		return
-	}
-	id, err := models.OrmManager().InsertOrUpdate(&group)
-	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
-		return
-	}
-
-	this.WriteJson(Response{0, "success.", id})
-}
-
-// @Summary 删除用户组
-// @Description 删除用户组
-// @Param	groupname	query 	string	true		"groupname"
-// @Success 200 {string}
-// @Failure 401 No Admin
-// @router /usergroup [delete]
-func (this *UserController) ApiDeleteGroup() {
-
-	var group models.Group
-	groupname := this.GetString("groupname")
-
-	group = models.Group{GroupName: groupname}
-	id, err := models.OrmManager().Delete(&group)
-
-	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
-		return
-	}
-
-	this.WriteJson(Response{0, "success.", id})
 }

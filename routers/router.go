@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego"
 	"back/appconfig/services/user_service"
 	"back/appconfig/services/default_service"
+	"back/appconfig/services/group_service"
 )
 
 // @APIVersion 1.0.0
@@ -17,6 +18,11 @@ func init() {
 		beego.NSNamespace("/user",
 			beego.NSInclude(
 				&user_service.UserController{},
+			),
+		),
+		beego.NSNamespace("/group",
+			beego.NSInclude(
+				&group_service.GroupController{},
 			),
 		),
 	)

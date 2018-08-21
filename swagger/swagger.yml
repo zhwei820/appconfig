@@ -4,25 +4,12 @@ info:
   version: 1.0.0
 basePath: /api
 paths:
-  /user/auth:
+  /group/group:
     get:
       tags:
-      - user
-      summary: 认证测试
-      description: 测试错误码
-      responses:
-        "200":
-          description: '{string}'
-        "401":
-          description: unauthorized
-      security:
-      - jwt: []
-  /user/group_list:
-    get:
-      tags:
-      - user
+      - group
       summary: 用户组列表
-      description: 用户组列表用户组列表用户组列表
+      description: 用户组列
       parameters:
       - in: query
         name: page
@@ -37,8 +24,70 @@ paths:
       responses:
         "200":
           description: '{string}'
+    post:
+      tags:
+      - group
+      summary: 新建用户组
+      description: 新建用户组
+      parameters:
+      - in: body
+        name: body
+        description: 用户组
+        schema:
+          $ref: '#/definitions/models.Group'
+      responses:
+        "200":
+          description: '{string}'
+  /group/group/{id}:
+    get:
+      tags:
+      - group
+      summary: 用户组
+      description: 用户组
+      responses:
+        "200":
+          description: '{string}'
+    put:
+      tags:
+      - group
+      summary: 更新用户组
+      description: 更新用户组
+      parameters:
+      - in: body
+        name: body
+        description: 用户组
+        schema:
+          $ref: '#/definitions/models.Group'
+      responses:
+        "200":
+          description: '{string}'
+    delete:
+      tags:
+      - group
+      summary: 删除用户组
+      description: 删除用户组
+      parameters:
+      - in: query
+        name: id
+        description: groupname
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{string}'
+  /user/auth:
+    get:
+      tags:
+      - user
+      summary: 认证测试
+      description: 测试错误码
+      responses:
+        "200":
+          description: '{string}'
         "401":
-          description: No Admin
+          description: unauthorized
+      security:
+      - jwt: []
   /user/login:
     post:
       tags:
@@ -86,6 +135,24 @@ paths:
         "403":
           description: 参数错误：缺失或格式错误
   /user/user:
+    put:
+      tags:
+      - user
+      summary: 更新用户
+      description: 更新用户
+      parameters:
+      - in: body
+        name: body
+        description: 用户信息
+        schema:
+          $ref: '#/definitions/models.StaffUser'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.StaffUser'
+        "403":
+          description: 参数错误：缺失或格式错误
     delete:
       tags:
       - user
@@ -126,45 +193,23 @@ paths:
           description: '{string}'
         "401":
           description: No Admin
-  /user/usergroup:
-    post:
-      tags:
-      - user
-      summary: 新建用户组
-      description: 新建用户组
-      parameters:
-      - in: query
-        name: page
-        description: page
-        required: true
-        type: string
-      - in: query
-        name: page_size
-        description: page_size
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{string}'
-        "401":
-          description: No Admin
-    delete:
-      tags:
-      - user
-      summary: 删除用户组
-      description: 删除用户组
-      parameters:
-      - in: query
-        name: groupname
-        description: groupname
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{string}'
-        "401":
-          description: No Admin
 definitions:
+  models.Group:
+    title: Group
+    type: object
+    properties:
+      create_at:
+        type: string
+        format: datetime
+      group:
+        type: string
+      groupname:
+        type: string
+      id:
+        type: integer
+        format: int64
+      permission:
+        type: string
   models.StaffUser:
     title: StaffUser
     type: object
