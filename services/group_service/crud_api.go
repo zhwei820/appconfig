@@ -52,6 +52,7 @@ func (this *GroupController) ApiCreateGroup() {
 
 // @Summary 用户组
 // @Description 用户组
+// @Param	id		path 	integer	true		"id"
 // @Success 200 {string}
 // @router /group/:id [get]
 func (this *GroupController) ApiDetailGroup() {
@@ -70,6 +71,7 @@ func (this *GroupController) ApiDetailGroup() {
 
 // @Summary 更新用户组
 // @Description 更新用户组
+// @Param	id		path 	integer	true		"id"
 // @Param   body  body models.Group 用户组
 // @Success 200 {string}
 // @router /group/:id [put]

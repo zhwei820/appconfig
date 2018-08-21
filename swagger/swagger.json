@@ -66,6 +66,15 @@
                 ],
                 "summary": "用户组",
                 "description": "用户组",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "{string}"
@@ -79,6 +88,13 @@
                 "summary": "更新用户组",
                 "description": "更新用户组",
                 "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
                     {
                         "in": "body",
                         "name": "body",
