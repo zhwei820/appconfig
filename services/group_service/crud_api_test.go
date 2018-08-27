@@ -12,19 +12,30 @@ import (
 )
 
 // TestGet is a sample to run an endpoint test
-func TestGet(t *testing.T) {
-	r, _ := http.NewRequest("GET", "/api/testing", nil)
+func TestList(t *testing.T) {
+	r, _ := http.NewRequest("GET", "/api/group/group?page=-1&page_size=10", nil)
 	w := httptest.NewRecorder()
 	beego.BeeApp.Handlers.ServeHTTP(w, r)
 
-	beego.Trace("testing", "TestGet", "Code[%d]\n%s", w.Code, w.Body.String())
+	beego.Trace("testing", "TestGet", "Code", w.Code, w.Body.String())
 
-	Convey("Subject: Test Station Endpoint\n", t, func() {
-		Convey("Status Code Should Be 200", func() {
+	Convey("List\n", t, func() {
+		Convey("Status Code ", func() {
 			So(w.Code, ShouldEqual, 200)
 		})
-		Convey("The Result Should Not Be Empty", func() {
-			So(w.Body.Len(), ShouldBeGreaterThan, 0)
+	})
+}
+
+func TestDetail(t *testing.T) {
+	r, _ := http.NewRequest("GET", "/api/group/group/1?", nil)
+	w := httptest.NewRecorder()
+	beego.BeeApp.Handlers.ServeHTTP(w, r)
+
+	beego.Trace("testing", "TestGet", "Code", w.Code, w.Body.String())
+
+	Convey("List\n", t, func() {
+		Convey("Status Code ", func() {
+			So(w.Code, ShouldEqual, 200)
 		})
 	})
 }

@@ -4,6 +4,7 @@ import (
 	"back/appconfig/models"
 	. "back/appconfig/services/base_service"
 	"strconv"
+	"github.com/astaxie/beego"
 )
 
 type GroupController struct {
@@ -24,6 +25,7 @@ func (this *GroupController) ApiGroupList() {
 	var groups [] models.Group
 	models.Groups().Limit(page_size, (page-1)*page_size).All(&groups)
 	count, _ := models.Groups().Count()
+	beego.Trace(count)
 
 	this.WriteJson(ResponseList{0, "success.", count, groups})
 }

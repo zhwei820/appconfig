@@ -1,6 +1,7 @@
 package routers
 
 import (
+	_ "back/appconfig/utils/util"
 	"github.com/astaxie/beego"
 	"back/appconfig/services/user_service"
 	"back/appconfig/services/default_service"
@@ -14,7 +15,6 @@ import (
 
 	"github.com/astaxie/beego/context"
 	"back/appconfig/utils/sentry"
-	_ "back/appconfig/utils/util"
 )
 
 // @APIVersion 1.0.0

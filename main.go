@@ -21,7 +21,6 @@ func main() {
 	if debug {
 		beego.BConfig.WebConfig.DirectoryIndex = true
 		beego.BConfig.WebConfig.StaticDir["/swagger"] = "./swagger"
-		orm.Debug = true
 	}
 	orm.DefaultTimeLoc = time.UTC
 	beego.BConfig.ServerName = "snail server 1.0"

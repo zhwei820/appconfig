@@ -28,11 +28,17 @@ func Init() {
 		fmt.Println(err)
 	}
 	orm.RunCommand()
+
+	debug, _ := beego.AppConfig.Bool("debug")
+	if debug {
+		orm.Debug = true
+	}
 }
 
-//返回带前缀的表名
-func TableName(str string) string {
-	return beego.AppConfig.String("db_prefix") + str
+////返回带前缀的表名
+func TableName(str string) string { // 测试暂时不支持 带前缀的表名
+	//return beego.AppConfig.String("db_prefix") + str
+	return str
 }
 
 // orm管理器

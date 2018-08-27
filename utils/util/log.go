@@ -43,9 +43,6 @@ func initLogger(fname string) {
 	zerolog.TimestampFunc = func() time.Time { return time.Now().Round(time.Second) }
 	log.Logger = zerolog.New(OpFile).With().Timestamp().Logger()
 
-	log.Error().
-		Int("Fault", 41650).Msg("Some Message")
-
 	//wg.Add(10)
 	//for ii := 0; ii < 10; ii ++ {
 	//	go func() {
