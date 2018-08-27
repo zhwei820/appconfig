@@ -86,7 +86,7 @@
                     "group"
                 ],
                 "summary": "更新用户组",
-                "description": "更新用户组",
+                "description": "更新用户组 (支持部分更新)",
                 "parameters": [
                     {
                         "in": "path",

@@ -40,7 +40,7 @@ func (this *GroupController) ApiDetailGroup() {
 	err := models.Groups().Filter("id", id).One(&group)
 
 	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
+		this.WriteJsonWithCode(404, err.Error())
 		return
 	}
 
@@ -77,6 +77,11 @@ func (this *GroupController) ApiCreateGroup() {
 // @router /group/:id [put]
 func (this *GroupController) ApiUpdateGroup() {
 	id, _ := strconv.Atoi(this.Ctx.Input.Param(":id"))
+	exist := models.Groups().Filter("id", id).Exist()
+	if !exist {
+		this.WriteJsonWithCode(404, "obj not exist!")
+		return
+	}
 
 	var group models.Group
 	keys, err := this.GetJsonWithKeys(&group)
@@ -101,6 +106,11 @@ func (this *GroupController) ApiUpdateGroup() {
 // @router /group/:id [delete]
 func (this *GroupController) ApiDeleteGroup() {
 	id, _ := strconv.Atoi(this.Ctx.Input.Param(":id"))
+	exist := models.Groups().Filter("id", id).Exist()
+	if !exist {
+		this.WriteJsonWithCode(404, "obj not exist!")
+		return
+	}
 
 	group := models.Group{Id: int64(id)}
 	num, err := models.OrmManager().Delete(&group)

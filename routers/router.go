@@ -5,6 +5,16 @@ import (
 	"back/appconfig/services/user_service"
 	"back/appconfig/services/default_service"
 	"back/appconfig/services/group_service"
+	"github.com/satori/go.uuid"
+
+	_ "github.com/astaxie/beego/session/redis"
+
+	"back/appconfig/models"
+	"back/appconfig/utils/define"
+
+	"github.com/astaxie/beego/context"
+	"back/appconfig/utils/sentry"
+	_ "back/appconfig/utils/util"
 )
 
 // @APIVersion 1.0.0
@@ -12,6 +22,9 @@ import (
 // 使用注释路由
 // @SecurityDefinition jwt apiKey Authorization header header
 func init() {
+	// 基础初始化
+	BaseInit()
+
 	beego.Router("/", &default_service.DefaultController{}, "*:ApiGetAll")
 	beego.Router("/view/:dir([\\w]+)/:html([\\w]+).html", &default_service.DefaultController{}, "*:Html")
 	ns := beego.NewNamespace("/api",
@@ -27,4 +40,15 @@ func init() {
 		),
 	)
 	beego.AddNamespace(ns)
+}
+
+func BaseInit() {
+	sentry.Init() // sentry
+	models.Init() // 模型
+	corsHandler := func(ctx *context.Context) {
+		ctx.Output.Header("Access-Control-Allow-Origin", ctx.Input.Domain())
+		ctx.Output.Header("Access-Control-Allow-Methods", "*")
+		ctx.Request.Header.Add(define.TraceId, uuid.NewV4().String()) // trace id
+	}
+	beego.InsertFilter("*", beego.BeforeRouter, corsHandler)
 }
