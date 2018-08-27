@@ -19,7 +19,7 @@ func (this *BaseController) GetLogger() *zerolog.Event {
 		Interface("uid", this.GetSession("uid"))
 }
 
-
+// 绑定json
 func (this *BaseController) GetJson(ob interface{}) (error) {
 	var err error
 	if err = json.Unmarshal(this.Ctx.Input.RequestBody, ob); err == nil {
@@ -33,11 +33,20 @@ func (this *BaseController) GetJson(ob interface{}) (error) {
 	return err
 }
 
+// 绑定json, 并返回1st level key list
+func (this *BaseController) GetJsonWithKeys(ob interface{}) ([] string, error) {
+	var err = this.GetJson(ob)
+	keys := utils.GetJsonKeys(this.Ctx.Input.RequestBody)
+	return keys, err
+}
+
+// 输出json
 func (this *BaseController) WriteJson(jsonData interface{}) {
 	this.Data["json"] = jsonData
 	this.ServeJSON()
 }
 
+// 输出带code的json
 func (this *BaseController) WriteJsonWithCode(code int, jsonData interface{}) {
 	this.Ctx.ResponseWriter.WriteHeader(code)
 	this.Data["json"] = jsonData

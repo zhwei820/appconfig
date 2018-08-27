@@ -1,5 +1,5 @@
-hash: 2d72d661cfc110fa3d988bc5a362ed6d327a35808401974b087a34fad6c6ed57
-updated: 2018-08-18T11:39:16.348471708+08:00
+hash: 6a9ec3c4118e661d8d737e10c7b790509dfb7d91dbc586c96f68a0d27a2eef1c
+updated: 2018-08-27T14:11:26.397380464+08:00
 imports:
 - name: github.com/astaxie/beego
   version: 053a075344c118a5cc41981b29ef612bb53d20ca
@@ -19,6 +19,8 @@ imports:
   version: deb3ae2ef2610fde3330947281941c562861188b
 - name: github.com/dgrijalva/jwt-go
   version: 06ea1031745cb8b3dab3f6a236daf2b0aa468b7e
+- name: github.com/francoispqt/gojay
+  version: a5068885b61dc3bbf5c753d34a3e2647772d3a00
 - name: github.com/getsentry/raven-go
   version: 7535a8fa2ace0ffb684b19f28d00655459ea2dae
 - name: github.com/go-sql-driver/mysql
@@ -35,6 +37,7 @@ imports:
   subpackages:
   - internal/cbor
   - internal/json
+  - log
 - name: github.com/satori/go.uuid
   version: f58768cc1a7a7e77a3bd49e98cdd21419399b6a3
 - name: golang.org/x/crypto

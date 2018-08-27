@@ -28,28 +28,6 @@ func (this *GroupController) ApiGroupList() {
 	this.WriteJson(ResponseList{0, "success.", count, groups})
 }
 
-// @Summary 新建用户组
-// @Description 新建用户组
-// @Param   body  body models.Group 用户组
-// @Success 200 {string}
-// @router /group [post]
-func (this *GroupController) ApiCreateGroup() {
-
-	var group models.Group
-	err := this.GetJson(&group)
-	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
-		return
-	}
-	id, err := models.OrmManager().InsertOrUpdate(&group)
-	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
-		return
-	}
-
-	this.WriteJson(Response{0, "success.", id})
-}
-
 // @Summary 用户组
 // @Description 用户组
 // @Param	id		path 	integer	true		"id"
@@ -69,8 +47,30 @@ func (this *GroupController) ApiDetailGroup() {
 	this.WriteJson(Response{0, "success.", group})
 }
 
+// @Summary 新建用户组
+// @Description 新建用户组
+// @Param   body  body models.Group 用户组
+// @Success 200 {string}
+// @router /group [post]
+func (this *GroupController) ApiCreateGroup() {
+
+	var group models.Group
+	err := this.GetJson(&group)
+	if err != nil {
+		this.WriteJsonWithCode(403, err.Error())
+		return
+	}
+	id, err := models.OrmManager().Insert(&group)
+	if err != nil {
+		this.WriteJsonWithCode(403, err.Error())
+		return
+	}
+
+	this.WriteJson(Response{0, "success.", id})
+}
+
 // @Summary 更新用户组
-// @Description 更新用户组
+// @Description 更新用户组 (支持部分更新)
 // @Param	id		path 	integer	true		"id"
 // @Param   body  body models.Group 用户组
 // @Success 200 {string}
@@ -79,13 +79,13 @@ func (this *GroupController) ApiUpdateGroup() {
 	id, _ := strconv.Atoi(this.Ctx.Input.Param(":id"))
 
 	var group models.Group
-	err := this.GetJson(&group)
+	keys, err := this.GetJsonWithKeys(&group)
 	if err != nil {
 		this.WriteJsonWithCode(403, err.Error())
 		return
 	}
 	group.Id = int64(id)
-	num, err := models.OrmManager().Update(&group)
+	num, err := models.OrmManager().Update(&group, keys...)
 	if err != nil {
 		this.WriteJsonWithCode(403, err.Error())
 		return
@@ -96,7 +96,7 @@ func (this *GroupController) ApiUpdateGroup() {
 
 // @Summary 删除用户组
 // @Description 删除用户组
-// @Param	id	query 	string	true		"groupname"
+// @Param	id		path 	integer	true		"id"
 // @Success 200 {string}
 // @router /group/:id [delete]
 func (this *GroupController) ApiDeleteGroup() {

@@ -118,11 +118,11 @@
                 "description": "删除用户组",
                 "parameters": [
                     {
-                        "in": "query",
+                        "in": "path",
                         "name": "id",
-                        "description": "groupname",
+                        "description": "id",
                         "required": true,
-                        "type": "string"
+                        "type": "integer"
                     }
                 ],
                 "responses": {
