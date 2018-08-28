@@ -12,3 +12,4 @@ var ErrorDatabase = ErrStruct{-201, "database error"}
 
 // input
 var ErrorInvalidJSON = ErrStruct{-301, "Invalid json input"}
+var ErrValidation     = ErrStruct{403001, "验证错误"}
