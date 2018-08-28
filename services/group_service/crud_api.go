@@ -60,12 +60,12 @@ func (this *GroupController) ApiCreateGroup() {
 	var group models.Group
 	err := this.GetJson(&group)
 	if err != nil {
-		this.WriteJsonWithStatusCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, ErrorInvalidJSON.Code, err.Error())
 		return
 	}
 	id, err := models.OrmManager().Insert(&group)
 	if err != nil {
-		this.WriteJsonWithStatusCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, ErrorDatabase.Code, err.Error())
 		return
 	}
 
@@ -82,20 +82,20 @@ func (this *GroupController) ApiUpdateGroup() {
 	id, _ := strconv.Atoi(this.Ctx.Input.Param(":id"))
 	exist := models.Groups().Filter("id", id).Exist()
 	if !exist {
-		this.WriteJsonWithStatusCode(404, "obj not exist!")
+		this.WriteJsonWithStatusCode(404, ErrorDatabase.Code, "obj not exist!")
 		return
 	}
 
 	var group models.Group
 	keys, err := this.GetJsonWithKeys(&group)
 	if err != nil {
-		this.WriteJsonWithStatusCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, ErrorInvalidJSON.Code, err.Error())
 		return
 	}
 	group.Id = int64(id)
 	num, err := models.OrmManager().Update(&group, keys...)
 	if err != nil {
-		this.WriteJsonWithStatusCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, ErrorDatabase.Code, err.Error())
 		return
 	}
 
@@ -111,7 +111,7 @@ func (this *GroupController) ApiDeleteGroup() {
 	id, _ := strconv.Atoi(this.Ctx.Input.Param(":id"))
 	exist := models.Groups().Filter("id", id).Exist()
 	if !exist {
-		this.WriteJsonWithStatusCode(404, "obj not exist!")
+		this.WriteJsonWithStatusCode(404, ErrorDatabase.Code, "obj not exist!")
 		return
 	}
 
@@ -119,7 +119,7 @@ func (this *GroupController) ApiDeleteGroup() {
 	num, err := models.OrmManager().Delete(&group)
 
 	if err != nil {
-		this.WriteJsonWithStatusCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, ErrorDatabase.Code, err.Error())
 		return
 	}
 

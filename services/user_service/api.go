@@ -1,7 +1,6 @@
 package user_service
 
 import (
-	"fmt"
 	"back/appconfig/models"
 	"back/appconfig/utils"
 
@@ -121,7 +120,7 @@ func (this *UserController) ApiLogin() {
 
 	user, ok := models.CheckUserAuth(username, password)
 	if !ok {
-		this.WriteJsonWithStatusCode(403, ErrUsernameOrPasswd)
+		this.WriteJsonWithStatusCode(403, ErrUsernameOrPasswd.Code, ErrUsernameOrPasswd.Msg)
 		return
 	}
 
@@ -142,7 +141,7 @@ func (this *UserController) ApiAuth() {
 
 	valid, err := et.ValidateToken(authtoken, 0)
 	if !valid {
-		this.WriteJsonWithStatusCode(401, ErrResponse{-1, fmt.Sprintf("%s", err)})
+		this.WriteJsonWithStatusCode(401, ErrorUnkown.Code, err.Error())
 		return
 	}
 	this.WriteJson(Response{0, "success.", "is login"})
