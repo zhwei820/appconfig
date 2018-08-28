@@ -5,6 +5,7 @@ import (
 	. "back/appconfig/services/base_service"
 	"strconv"
 	"github.com/astaxie/beego"
+	. "back/appconfig/utils/error_define"
 )
 
 type GroupController struct {
@@ -27,7 +28,7 @@ func (this *GroupController) ApiGroupList() {
 	count, _ := models.Groups().Count()
 	beego.Trace(count)
 
-	this.WriteJson(ResponseList{0, "success.", count, groups})
+	this.WriteListJson(count, groups)
 }
 
 // @Summary 用户组
@@ -42,11 +43,11 @@ func (this *GroupController) ApiDetailGroup() {
 	err := models.Groups().Filter("id", id).One(&group)
 
 	if err != nil {
-		this.WriteJsonWithCode(404, err.Error())
+		this.WriteJsonWithStatusCode(404, ErrorDatabase.Code, err.Error())
 		return
 	}
 
-	this.WriteJson(Response{0, "success.", group})
+	this.WriteJson(group)
 }
 
 // @Summary 新建用户组
@@ -59,12 +60,12 @@ func (this *GroupController) ApiCreateGroup() {
 	var group models.Group
 	err := this.GetJson(&group)
 	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, err.Error())
 		return
 	}
 	id, err := models.OrmManager().Insert(&group)
 	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, err.Error())
 		return
 	}
 
@@ -81,20 +82,20 @@ func (this *GroupController) ApiUpdateGroup() {
 	id, _ := strconv.Atoi(this.Ctx.Input.Param(":id"))
 	exist := models.Groups().Filter("id", id).Exist()
 	if !exist {
-		this.WriteJsonWithCode(404, "obj not exist!")
+		this.WriteJsonWithStatusCode(404, "obj not exist!")
 		return
 	}
 
 	var group models.Group
 	keys, err := this.GetJsonWithKeys(&group)
 	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, err.Error())
 		return
 	}
 	group.Id = int64(id)
 	num, err := models.OrmManager().Update(&group, keys...)
 	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, err.Error())
 		return
 	}
 
@@ -110,7 +111,7 @@ func (this *GroupController) ApiDeleteGroup() {
 	id, _ := strconv.Atoi(this.Ctx.Input.Param(":id"))
 	exist := models.Groups().Filter("id", id).Exist()
 	if !exist {
-		this.WriteJsonWithCode(404, "obj not exist!")
+		this.WriteJsonWithStatusCode(404, "obj not exist!")
 		return
 	}
 
@@ -118,7 +119,7 @@ func (this *GroupController) ApiDeleteGroup() {
 	num, err := models.OrmManager().Delete(&group)
 
 	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, err.Error())
 		return
 	}
 

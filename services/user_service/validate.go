@@ -17,7 +17,7 @@ func (this *UserController) validateRegister(username, password, email string) e
 	if valid.HasErrors() {
 		// 如果有错误信息，证明验证没通过
 		for _, err := range valid.Errors {
-			this.WriteJsonWithCode(403, ErrResponse{403001, map[string]string{err.Key: err.Message}})
+			this.WriteJsonWithStatusCode(403, ErrResponse{403001, map[string]string{err.Key: err.Message}})
 			return err
 		}
 	}

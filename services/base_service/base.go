@@ -40,15 +40,24 @@ func (this *BaseController) GetJsonWithKeys(ob interface{}) ([] string, error) {
 	return keys, err
 }
 
+// 输出json list
+func (this *BaseController) WriteListJson(count int64, Data interface{}) {
+	jsonData := ResponseList{0, "success", count, Data}
+	this.Data["json"] = jsonData
+	this.ServeJSON()
+}
+
 // 输出json
-func (this *BaseController) WriteJson(jsonData interface{}) {
+func (this *BaseController) WriteJson(Data interface{}) {
+	jsonData := Response{0, "success", Data}
 	this.Data["json"] = jsonData
 	this.ServeJSON()
 }
 
 // 输出带code的json
-func (this *BaseController) WriteJsonWithCode(code int, jsonData interface{}) {
-	this.Ctx.ResponseWriter.WriteHeader(code)
+func (this *BaseController) WriteJsonWithStatusCode(statucCode int, errorCode int, errMsg string) {
+	this.Ctx.ResponseWriter.WriteHeader(statucCode)
+	jsonData := Response{errorCode, errMsg, nil}
 	this.Data["json"] = jsonData
 	this.ServeJSON()
 }

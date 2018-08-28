@@ -7,12 +7,13 @@ import (
 
 	"strings"
 	. "back/appconfig/services/base_service"
+	. "back/appconfig/utils/error_define"
 )
 
 var (
-	ErrPhoneIsRegis     = ErrResponse{422001, "手机用户已经注册"}
-	ErrUsernameIsRegis  = ErrResponse{422002, "用户名已经被注册"}
-	ErrUsernameOrPasswd = ErrResponse{422003, "账号或密码错误。"}
+	ErrPhoneIsRegis     = ErrStruct{422001, "手机用户已经注册"}
+	ErrUsernameIsRegis  = ErrStruct{422002, "用户名已经被注册"}
+	ErrUsernameOrPasswd = ErrStruct{422003, "账号或密码错误。"}
 )
 
 type UserController struct {
@@ -40,7 +41,7 @@ func (this *UserController) ApiRegister() {
 	}
 
 	if models.CheckUserUsername(username) {
-		this.WriteJsonWithCode(403, ErrUsernameIsRegis)
+		this.WriteJsonWithStatusCode(403, ErrUsernameIsRegis.Code, ErrUsernameIsRegis.Msg)
 		return
 	}
 
@@ -49,7 +50,7 @@ func (this *UserController) ApiRegister() {
 		Username: username,
 		Password: password,
 	}
-	this.WriteJson(Response{0, "success.", models.CreateUser(user)})
+	this.WriteJson(models.CreateUser(user))
 
 }
 
@@ -65,12 +66,12 @@ func (this *UserController) ApiUpdateUser() {
 	var user models.StaffUser
 	err := this.GetJson(&user)
 	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, ErrorInvalidJSON.Code, err.Error())
 		return
 	}
 	id, err := models.OrmManager().InsertOrUpdate(&user)
 	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, ErrorDatabase.Code, err.Error())
 		return
 	}
 
@@ -92,7 +93,7 @@ func (this *UserController) ApiDeleteUser() {
 	id, err := models.OrmManager().Delete(&user)
 
 	if err != nil {
-		this.WriteJsonWithCode(403, err.Error())
+		this.WriteJsonWithStatusCode(403, ErrorDatabase.Code, err.Error())
 		return
 	}
 
@@ -120,7 +121,7 @@ func (this *UserController) ApiLogin() {
 
 	user, ok := models.CheckUserAuth(username, password)
 	if !ok {
-		this.WriteJsonWithCode(403, ErrUsernameOrPasswd)
+		this.WriteJsonWithStatusCode(403, ErrUsernameOrPasswd)
 		return
 	}
 
@@ -141,7 +142,7 @@ func (this *UserController) ApiAuth() {
 
 	valid, err := et.ValidateToken(authtoken, 0)
 	if !valid {
-		this.WriteJsonWithCode(401, ErrResponse{-1, fmt.Sprintf("%s", err)})
+		this.WriteJsonWithStatusCode(401, ErrResponse{-1, fmt.Sprintf("%s", err)})
 		return
 	}
 	this.WriteJson(Response{0, "success.", "is login"})
@@ -164,5 +165,5 @@ func (this *UserController) ApiUserList() {
 	models.Users().Limit(page_size, (page-1)*page_size).All(&users)
 	count, _ := models.Users().Count()
 
-	this.WriteJson(ResponseList{0, "success.", count, users})
+	this.WriteListJson(count, users)
 }

@@ -9,6 +9,7 @@ import (
 	_ "back/appconfig/routers"
 	"github.com/astaxie/beego"
 	. "github.com/smartystreets/goconvey/convey"
+	"back/appconfig/utils"
 )
 
 // TestGet is a sample to run an endpoint test
@@ -17,10 +18,10 @@ func TestList(t *testing.T) {
 	w := httptest.NewRecorder()
 	beego.BeeApp.Handlers.ServeHTTP(w, r)
 
-	beego.Trace("testing", "TestGet", "Code", w.Code, w.Body.String())
+	beego.Trace("TestList", "code", w.Code, w.Body.String())
 
-	Convey("List\n", t, func() {
-		Convey("Status Code ", func() {
+	Convey("list\n", t, func() {
+		Convey("status Code ", func() {
 			So(w.Code, ShouldEqual, 200)
 		})
 	})
@@ -31,11 +32,17 @@ func TestDetail(t *testing.T) {
 	w := httptest.NewRecorder()
 	beego.BeeApp.Handlers.ServeHTTP(w, r)
 
-	beego.Trace("testing", "TestGet", "Code", w.Code, w.Body.String())
+	beego.Trace("TestDetail", "code", w.Code, w.Body.String())
 
-	Convey("List\n", t, func() {
-		Convey("Status Code ", func() {
+	Convey("detail\n", t, func() {
+		Convey("status Code ", func() {
 			So(w.Code, ShouldEqual, 200)
+		})
+		Convey("result Code ", func() {
+
+			bodyM, _ := utils.UnmarshalToMap(w.Body.Bytes())
+
+			So(bodyM["code"], ShouldEqual, "0")
 		})
 	})
 }
