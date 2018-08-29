@@ -1,5 +1,5 @@
-hash: 6a9ec3c4118e661d8d737e10c7b790509dfb7d91dbc586c96f68a0d27a2eef1c
-updated: 2018-08-27T14:11:26.397380464+08:00
+hash: f8fb21f318d042ccedfbcd2952a06abb68a600011b18e12d2dbb3f87fee7aba6
+updated: 2018-08-29T09:30:54.980587352+08:00
 imports:
 - name: github.com/astaxie/beego
   version: 053a075344c118a5cc41981b29ef612bb53d20ca
@@ -15,6 +15,8 @@ imports:
   - toolbox
   - utils
   - validation
+- name: github.com/bitly/go-simplejson
+  version: aabad6e819789e569bd6aabf444c935aa9ba1e44
 - name: github.com/certifi/gocertifi
   version: deb3ae2ef2610fde3330947281941c562861188b
 - name: github.com/dgrijalva/jwt-go
