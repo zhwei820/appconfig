@@ -69,7 +69,8 @@ func (this *GroupController) ApiCreateGroup() {
 		return
 	}
 
-	this.WriteJson(Response{0, "success.", id})
+	this.WriteJson(id)
+
 }
 
 // @Summary 更新用户组
@@ -98,8 +99,8 @@ func (this *GroupController) ApiUpdateGroup() {
 		this.WriteJsonWithStatusCode(403, ErrorDatabase.Code, err.Error())
 		return
 	}
+	this.WriteJson(num)
 
-	this.WriteJson(Response{0, "success.", num})
 }
 
 // @Summary 删除用户组
@@ -122,6 +123,6 @@ func (this *GroupController) ApiDeleteGroup() {
 		this.WriteJsonWithStatusCode(403, ErrorDatabase.Code, err.Error())
 		return
 	}
+	this.WriteJson(num)
 
-	this.WriteJson(Response{0, "success.", num})
 }

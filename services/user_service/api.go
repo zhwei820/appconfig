@@ -74,7 +74,7 @@ func (this *UserController) ApiUpdateUser() {
 		return
 	}
 
-	this.WriteJson(Response{0, "success.", id})
+	this.WriteJson(id)
 }
 
 // @Summary 删除用户
@@ -96,7 +96,7 @@ func (this *UserController) ApiDeleteUser() {
 		return
 	}
 
-	this.WriteJson(Response{0, "success.", id})
+	this.WriteJson(id)
 }
 
 // @Summary 登录
@@ -144,7 +144,7 @@ func (this *UserController) ApiAuth() {
 		this.WriteJsonWithStatusCode(401, ErrorUnkown.Code, err.Error())
 		return
 	}
-	this.WriteJson(Response{0, "success.", "is login"})
+	this.WriteJson("is login")
 
 }
 
