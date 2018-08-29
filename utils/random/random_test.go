@@ -16,7 +16,7 @@ func BenchmarkRandString(b *testing.B) {
 	}
 }
 
-func BenchmarkRandIntr(b *testing.B) {
+func BenchmarkRandIntRaw(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		rand.Int()
 	}
