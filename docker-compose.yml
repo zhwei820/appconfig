@@ -4,9 +4,9 @@ services:
 # ========== dev or test ================
 
   web:
-    image: beego_api:debug
+    image: appconfig:debug
     restart: always
-    command: ./beego_api
+    command: ./appconfig
     volumes:
       - ./data/static:/data/data/static
       - ./data/log/:/data/data/log
@@ -22,14 +22,14 @@ services:
     external_links:
       - "product_mysql:mysql"
       - "product_redis:redis"
-    container_name: beego_api_web
+    container_name: appconfig_web
     sysctls:
       net.core.somaxconn: 163840
 
 # ========== prod ================
 
   prod:
-    image: beego_api:release
+    image: appconfig:release
     restart: always
     command: supervisord -c /etc/supervisord.conf
     volumes:

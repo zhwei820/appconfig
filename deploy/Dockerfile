@@ -5,9 +5,9 @@ RUN apt-get update && apt-get -y install supervisor
 RUN mkdir -p /data
 WORKDIR /data
 
-ADD ./beego_api /data
+ADD ./appconfig /data
 ADD ./supervisord.conf /etc/supervisord.conf
-ONBUILD ADD ./beego_api /data
+ONBUILD ADD ./appconfig /data
 ONBUILD ADD ./supervisord.conf /etc/supervisord.conf
 
 

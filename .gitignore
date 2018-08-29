@@ -1,7 +1,7 @@
-/beego_api
+/appconfig
 /lastupdate.tmp
 /*.tmp
 .idea
 data
 vendor
-deploy/beego_api
+deploy/appconfig

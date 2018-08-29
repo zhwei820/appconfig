@@ -1,4 +1,4 @@
-package: back/beego_api
+package: back/appconfig
 import:
 - package: github.com/astaxie/beego
   version: ^1.10.1
