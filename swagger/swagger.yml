@@ -86,92 +86,10 @@ paths:
       responses:
         "200":
           description: '{string}'
-  /testgroup/testgroup:
+  /staffuser/auth:
     get:
       tags:
-      - testgroup
-      summary: TestGroup列表
-      description: TestGroup列表
-      parameters:
-      - in: query
-        name: page
-        description: page
-        required: true
-        type: string
-      - in: query
-        name: page_size
-        description: page_size
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{string}'
-    post:
-      tags:
-      - testgroup
-      summary: 新建TestGroup
-      description: 新建TestGroup
-      parameters:
-      - in: body
-        name: body
-        description: TestGroup
-        schema:
-          $ref: '#/definitions/models.TestGroup'
-      responses:
-        "200":
-          description: '{string}'
-  /testgroup/testgroup/{id}:
-    get:
-      tags:
-      - testgroup
-      summary: TestGroup
-      description: TestGroup
-      parameters:
-      - in: path
-        name: id
-        description: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: '{string}'
-    put:
-      tags:
-      - testgroup
-      summary: 更新TestGroup
-      description: 更新TestGroup (支持部分更新)
-      parameters:
-      - in: path
-        name: id
-        description: id
-        required: true
-        type: integer
-      - in: body
-        name: body
-        description: TestGroup
-        schema:
-          $ref: '#/definitions/models.TestGroup'
-      responses:
-        "200":
-          description: '{string}'
-    delete:
-      tags:
-      - testgroup
-      summary: 删除TestGroup
-      description: 删除TestGroup
-      parameters:
-      - in: path
-        name: id
-        description: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: '{string}'
-  /user/auth:
-    get:
-      tags:
-      - user
+      - staffuser
       summary: 认证测试
       description: 测试错误码
       responses:
@@ -181,10 +99,10 @@ paths:
           description: unauthorized
       security:
       - jwt: []
-  /user/login:
+  /staffuser/login:
     post:
       tags:
-      - user
+      - staffuser
       summary: 登录
       description: 账号登录接口
       parameters:
@@ -203,73 +121,12 @@ paths:
           description: '{string}'
         "401":
           description: No Admin
-  /user/reg:
-    post:
-      tags:
-      - user
-      summary: 注册新用户
-      description: 用户注册
-      parameters:
-      - in: formData
-        name: username
-        description: 用户昵称
-        required: true
-        type: string
-      - in: formData
-        name: password
-        description: 密码
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.StaffUser'
-        "403":
-          description: 参数错误：缺失或格式错误
-  /user/user:
-    put:
-      tags:
-      - user
-      summary: 更新用户
-      description: 更新用户
-      parameters:
-      - in: body
-        name: body
-        description: 用户信息
-        schema:
-          $ref: '#/definitions/models.StaffUser'
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.StaffUser'
-        "403":
-          description: 参数错误：缺失或格式错误
-    delete:
-      tags:
-      - user
-      summary: 删除用户
-      description: 删除用户
-      parameters:
-      - in: formData
-        name: username
-        description: 用户昵称
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.StaffUser'
-        "403":
-          description: 参数错误：缺失或格式错误
-  /user/user_list:
+  /staffuser/staffuser:
     get:
       tags:
-      - user
-      summary: 用户列表
-      description: 用户列表
+      - staffuser
+      summary: StaffUser列表
+      description: StaffUser列表
       parameters:
       - in: query
         name: page
@@ -284,8 +141,68 @@ paths:
       responses:
         "200":
           description: '{string}'
-        "401":
-          description: No Admin
+    post:
+      tags:
+      - staffuser
+      summary: 新建StaffUser
+      description: 新建StaffUser
+      parameters:
+      - in: body
+        name: body
+        description: StaffUser
+        schema:
+          $ref: '#/definitions/models.StaffUser'
+      responses:
+        "200":
+          description: '{string}'
+  /staffuser/staffuser/{id}:
+    get:
+      tags:
+      - staffuser
+      summary: StaffUser
+      description: StaffUser
+      parameters:
+      - in: path
+        name: id
+        description: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '{string}'
+    put:
+      tags:
+      - staffuser
+      summary: 更新StaffUser
+      description: 更新StaffUser (支持部分更新)
+      parameters:
+      - in: path
+        name: id
+        description: id
+        required: true
+        type: integer
+      - in: body
+        name: body
+        description: StaffUser
+        schema:
+          $ref: '#/definitions/models.StaffUser'
+      responses:
+        "200":
+          description: '{string}'
+    delete:
+      tags:
+      - staffuser
+      summary: 删除StaffUser
+      description: 删除StaffUser
+      parameters:
+      - in: path
+        name: id
+        description: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '{string}'
 definitions:
   models.Group:
     title: Group
@@ -316,22 +233,6 @@ definitions:
         type: integer
         format: int64
       username:
-        type: string
-  models.TestGroup:
-    title: TestGroup
-    type: object
-    properties:
-      create_at:
-        type: string
-        format: datetime
-      group:
-        type: string
-      groupname:
-        type: string
-      id:
-        type: integer
-        format: int64
-      permission:
         type: string
 securityDefinitions:
   jwt:

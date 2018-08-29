@@ -38,19 +38,19 @@ func init() {
 	orm.RegisterModel(new(StaffUser))
 }
 
-func Users() orm.QuerySeter {
+func StaffUsers() orm.QuerySeter {
 	return OrmManager().QueryTable(new(StaffUser))
 }
 
 // 检测手机号是否注册
 func CheckUserPhone(phone string) bool {
-	exist := Users().Filter("phone", phone).Exist()
+	exist := StaffUsers().Filter("phone", phone).Exist()
 	return exist
 }
 
 // 检测用户昵称是否存在
 func CheckUserUsername(username string) bool {
-	exist := Users().Filter("username", username).Exist()
+	exist := StaffUsers().Filter("username", username).Exist()
 	return exist
 }
 
@@ -67,7 +67,7 @@ func CreateUser(user StaffUser) int64 {
 //检测手机和昵称是否注册
 func CheckUserPhoneOrUsername(phone string, username string) bool {
 	cond := orm.NewCondition()
-	count, _ := Users().SetCond(cond.And("phone", phone).Or("username", username)).Count()
+	count, _ := StaffUsers().SetCond(cond.And("phone", phone).Or("username", username)).Count()
 	if count <= int64(0) {
 		return false
 	}
@@ -77,7 +77,7 @@ func CheckUserAuth(username string, password string) (StaffUser, bool) {
 
 	var user StaffUser
 
-	err := Users().Filter("username", username).One(&user)
+	err := StaffUsers().Filter("username", username).One(&user)
 
 	if err != nil || user.Password != utils.TransPassword(password) {
 		return user, false

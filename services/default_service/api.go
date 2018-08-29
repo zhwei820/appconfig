@@ -20,7 +20,9 @@ func (this *DefaultController) ApiGetAll() {
 func (this *DefaultController) Html() {
 	dir := this.Ctx.Input.Param(":dir")
 	html := this.Ctx.Input.Param(":html")
+	if html != "login" && html != "register" {
+		this.Layout = "templates/base/userinfo.html"
+	}
 
-	this.Layout = "templates/base/userinfo.html"
 	this.TplName = "templates/" + dir + "/" + html + ".html"
 }
