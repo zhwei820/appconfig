@@ -86,6 +86,88 @@ paths:
       responses:
         "200":
           description: '{string}'
+  /testgroup/testgroup:
+    get:
+      tags:
+      - testgroup
+      summary: TestGroup列表
+      description: TestGroup列表
+      parameters:
+      - in: query
+        name: page
+        description: page
+        required: true
+        type: string
+      - in: query
+        name: page_size
+        description: page_size
+        required: true
+        type: string
+      responses:
+        "200":
+          description: '{string}'
+    post:
+      tags:
+      - testgroup
+      summary: 新建TestGroup
+      description: 新建TestGroup
+      parameters:
+      - in: body
+        name: body
+        description: TestGroup
+        schema:
+          $ref: '#/definitions/models.TestGroup'
+      responses:
+        "200":
+          description: '{string}'
+  /testgroup/testgroup/{id}:
+    get:
+      tags:
+      - testgroup
+      summary: TestGroup
+      description: TestGroup
+      parameters:
+      - in: path
+        name: id
+        description: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '{string}'
+    put:
+      tags:
+      - testgroup
+      summary: 更新TestGroup
+      description: 更新TestGroup (支持部分更新)
+      parameters:
+      - in: path
+        name: id
+        description: id
+        required: true
+        type: integer
+      - in: body
+        name: body
+        description: TestGroup
+        schema:
+          $ref: '#/definitions/models.TestGroup'
+      responses:
+        "200":
+          description: '{string}'
+    delete:
+      tags:
+      - testgroup
+      summary: 删除TestGroup
+      description: 删除TestGroup
+      parameters:
+      - in: path
+        name: id
+        description: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: '{string}'
   /user/auth:
     get:
       tags:
@@ -234,6 +316,22 @@ definitions:
         type: integer
         format: int64
       username:
+        type: string
+  models.TestGroup:
+    title: TestGroup
+    type: object
+    properties:
+      create_at:
+        type: string
+        format: datetime
+      group:
+        type: string
+      groupname:
+        type: string
+      id:
+        type: integer
+        format: int64
+      permission:
         type: string
 securityDefinitions:
   jwt:

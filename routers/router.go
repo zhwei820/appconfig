@@ -15,6 +15,7 @@ import (
 
 	"github.com/astaxie/beego/context"
 	"back/appconfig/utils/sentry"
+	"back/appconfig/services/testgroup_service"
 )
 
 // @APIVersion 1.0.0
@@ -38,6 +39,12 @@ func init() {
 				&group_service.GroupController{},
 			),
 		),
+		beego.NSNamespace("/testgroup",
+			beego.NSInclude(
+				&testgroup_service.TestGroupController{},
+			),
+		),
+
 	)
 	beego.AddNamespace(ns)
 }

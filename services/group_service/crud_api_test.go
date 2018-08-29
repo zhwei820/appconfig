@@ -13,15 +13,22 @@ import (
 	"fmt"
 	"bytes"
 	"back/appconfig/utils/random"
+	"io"
 )
 
+func getRandomInput() io.Reader {
+	str := random.RandNumString(6)
+
+	return bytes.NewBuffer([]byte(fmt.Sprintf(`{
+	                            "groupname": "%v","group": "%v","permission": "%v"
+								}`,
+		str, str, str,
+	)))
+}
+
 func TestCreate(t *testing.T) {
-	str := random.RandString(6)
 	r, _ := http.NewRequest("POST", fmt.Sprintf("/api/group/group/?"),
-		bytes.NewBuffer([]byte(fmt.Sprintf(`{"group": "string%v",
-								"groupname": "string%v",
-  								"permission": "string%v"
-								}`, str, str, str))))
+		getRandomInput())
 
 	w := httptest.NewRecorder()
 	beego.BeeApp.Handlers.ServeHTTP(w, r)
@@ -39,7 +46,7 @@ func TestCreate(t *testing.T) {
 			code := j.Get("code").MustInt()
 			So(code, ShouldEqual, 0)
 
-			resId = j.Get("data").MustInt() // obj id
+			resId = j.Get("data").MustInt() // model_data.obj id
 
 		})
 	})
@@ -90,13 +97,9 @@ func testDetail(t *testing.T, resId int) {
 }
 
 func testUpdate(t *testing.T, resId int) {
-	str := random.RandString(6)
 
 	r, _ := http.NewRequest("PUT", fmt.Sprintf("/api/group/group/%v?", resId),
-		bytes.NewBuffer([]byte(fmt.Sprintf(`{"group": "string%v",
-								"groupname": "string%v",
-  								"permission": "string%v"
-								}`, str, str, str))))
+		getRandomInput())
 
 	w := httptest.NewRecorder()
 	beego.BeeApp.Handlers.ServeHTTP(w, r)
