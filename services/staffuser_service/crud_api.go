@@ -3,18 +3,17 @@ package staffuser_service
 import (
 	"back/appconfig/models"
 	. "back/appconfig/services/base_service"
+	. "back/appconfig/utils/error_define"
+
 	"strconv"
 	"github.com/astaxie/beego"
-	. "back/appconfig/utils/error_define"
 	"back/appconfig/utils"
 
-	"strings"
 )
 
 var (
 	ErrPhoneIsRegis     = ErrStruct{422001, "手机用户已经注册"}
 	ErrUsernameIsRegis  = ErrStruct{422002, "用户名已经被注册"}
-	ErrUsernameOrPasswd = ErrStruct{422003, "账号或密码错误。"}
 )
 
 type StaffUserController struct {
@@ -145,51 +144,5 @@ func (this *StaffUserController) ApiDeleteStaffUser() {
 		return
 	}
 	this.WriteJson(num)
-
-}
-
-// @Summary 登录
-// @Description 账号登录接口
-// @Param	username	formData 	string	true		"用户昵称"
-// @Param	password	formData 	string	true		"密码"
-// @Success 200 {string}
-// @Failure 401 No Admin
-// @router /login [post]
-func (this *StaffUserController) ApiLogin() {
-	//defaultController := default_service.DefaultController{this.BaseController}  // other controller
-	//defaultController.GetAllPublic()
-	
-	username := this.GetString("username")
-	password := this.GetString("password")
-	this.GetLogger().Msg("this is a message with trace id")
-	this.GetLogger().Msgf("username: %s try to login.", username)
-
-	user, ok := models.CheckUserAuth(username, password)
-	if !ok {
-		this.WriteJsonWithStatusCode(403, ErrUsernameOrPasswd.Code, ErrUsernameOrPasswd.Msg)
-		return
-	}
-
-	this.SetSession("uid", user.Id)
-	this.Redirect("/view/admin/index2.html", 302)
-
-}
-
-// @Summary 认证测试
-// @Description 测试错误码
-// @Success 200 {string}
-// @Failure 401 unauthorized
-// @router /auth [get]
-// @Security jwt
-func (this *StaffUserController) ApiAuth() {
-	et := utils.EasyToken{}
-	authtoken := strings.TrimSpace(this.Ctx.Request.Header.Get("Authorization"))
-
-	valid, err := et.ValidateToken(authtoken, 0)
-	if !valid {
-		this.WriteJsonWithStatusCode(401, ErrorUnkown.Code, err.Error())
-		return
-	}
-	this.WriteJson("is login")
 
 }
