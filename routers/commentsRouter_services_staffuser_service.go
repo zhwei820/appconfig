@@ -9,17 +9,9 @@ func init() {
 
 	beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"],
 		beego.ControllerComments{
-			Method: "ApiAuth",
-			Router: `/auth`,
+			Method: "ApiStaffUserList",
+			Router: `/staffuser`,
 			AllowHTTPMethods: []string{"get"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"],
-		beego.ControllerComments{
-			Method: "ApiLogin",
-			Router: `/login`,
-			AllowHTTPMethods: []string{"post"},
 			MethodParams: param.Make(),
 			Params: nil})
 
@@ -28,14 +20,6 @@ func init() {
 			Method: "ApiCreateStaffUser",
 			Router: `/staffuser`,
 			AllowHTTPMethods: []string{"post"},
-			MethodParams: param.Make(),
-			Params: nil})
-
-	beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"],
-		beego.ControllerComments{
-			Method: "ApiStaffUserList",
-			Router: `/staffuser`,
-			AllowHTTPMethods: []string{"get"},
 			MethodParams: param.Make(),
 			Params: nil})
 

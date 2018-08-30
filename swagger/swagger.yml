@@ -4,6 +4,28 @@ info:
   version: 1.0.0
 basePath: /api
 paths:
+  /:
+    get:
+      tags:
+      - default_serviceDefaultController
+      description: API 欢迎信息
+      operationId: DefaultController.欢迎信息
+      responses:
+        "200":
+          description: '{string}'
+  /auth:
+    get:
+      tags:
+      - auth_serviceAuthController
+      summary: 认证测试
+      description: 测试错误码
+      responses:
+        "200":
+          description: '{string}'
+        "401":
+          description: unauthorized
+      security:
+      - jwt: []
   /group/group:
     get:
       tags:
@@ -86,23 +108,10 @@ paths:
       responses:
         "200":
           description: '{string}'
-  /staffuser/auth:
-    get:
-      tags:
-      - staffuser
-      summary: 认证测试
-      description: 测试错误码
-      responses:
-        "200":
-          description: '{string}'
-        "401":
-          description: unauthorized
-      security:
-      - jwt: []
-  /staffuser/login:
+  /login:
     post:
       tags:
-      - staffuser
+      - auth_serviceAuthController
       summary: 登录
       description: 账号登录接口
       parameters:
@@ -116,6 +125,23 @@ paths:
         description: 密码
         required: true
         type: string
+      responses:
+        "200":
+          description: '{string}'
+        "401":
+          description: No Admin
+  /register:
+    post:
+      tags:
+      - auth_serviceAuthController
+      summary: 注册
+      description: 账号注册接口
+      parameters:
+      - in: body
+        name: body
+        description: StaffUser
+        schema:
+          $ref: '#/definitions/models.StaffUser'
       responses:
         "200":
           description: '{string}'
@@ -240,3 +266,13 @@ securityDefinitions:
     description: header
     name: Authorization
     in: header
+tags:
+- name: back/appconfig/services/default_serviceDefaultController
+  description: |
+    Operations about object
+- name: back/appconfig/services/default_serviceDefaultController
+  description: |
+    Operations about object
+- name: back/appconfig/services/default_serviceDefaultController
+  description: |
+    Operations about object
