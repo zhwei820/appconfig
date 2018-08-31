@@ -1,12 +1,12 @@
 package main
 
 import (
-	_ "back/appconfig/routers"
+	_ "github.com/zhwei820/appconfig/routers"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 
 	"time"
-	"back/appconfig/utils/util"
+	"github.com/zhwei820/appconfig/utils/util"
 )
 
 func main() {

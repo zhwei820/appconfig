@@ -6,7 +6,7 @@ GOFLAGS ?= $(GOFLAGS:)
 all: install test
 
 build:
-	go build $(GOFLAGS) ./...
+	go build $(GOFLAGS) ./.
 
 install:
 	glide i
@@ -17,6 +17,8 @@ bench: install
 clean:
 	go clean $(GOFLAGS) -i ./...
 
+rundev: build
+	./appconfig
 
 # 测试
 test:

@@ -2,9 +2,9 @@ package base_service
 
 import (
 	"github.com/astaxie/beego"
-	"back/appconfig/utils/define"
+	"github.com/zhwei820/appconfig/utils/define"
 	"encoding/json"
-	"back/appconfig/utils"
+	"github.com/zhwei820/appconfig/utils"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )

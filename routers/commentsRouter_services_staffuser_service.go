@@ -7,7 +7,7 @@ import (
 
 func init() {
 
-	beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"],
+	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"],
 		beego.ControllerComments{
 			Method: "ApiStaffUserList",
 			Router: `/staffuser`,
@@ -15,7 +15,7 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"],
+	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"],
 		beego.ControllerComments{
 			Method: "ApiCreateStaffUser",
 			Router: `/staffuser`,
@@ -23,7 +23,7 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"],
+	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"],
 		beego.ControllerComments{
 			Method: "ApiDetailStaffUser",
 			Router: `/staffuser/:id`,
@@ -31,7 +31,7 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"],
+	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"],
 		beego.ControllerComments{
 			Method: "ApiUpdateStaffUser",
 			Router: `/staffuser/:id`,
@@ -39,7 +39,7 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["back/appconfig/services/staffuser_service:StaffUserController"],
+	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"],
 		beego.ControllerComments{
 			Method: "ApiDeleteStaffUser",
 			Router: `/staffuser/:id`,

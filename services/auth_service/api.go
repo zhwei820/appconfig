@@ -1,12 +1,12 @@
 package auth_service
 
 import (
-	"back/appconfig/models"
-	"back/appconfig/utils"
+	"github.com/zhwei820/appconfig/models"
+	"github.com/zhwei820/appconfig/utils"
 	"strings"
-	. "back/appconfig/services/base_service"
-	. "back/appconfig/utils/error_define"
-	"back/appconfig/services/staffuser_service"
+	. "github.com/zhwei820/appconfig/services/base_service"
+	. "github.com/zhwei820/appconfig/utils/error_define"
+	"github.com/zhwei820/appconfig/services/staffuser_service"
 )
 
 var (

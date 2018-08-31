@@ -1,10 +1,10 @@
 package routers
 
 import (
-	"back/appconfig/utils/sentry"
-	"back/appconfig/models"
+	"github.com/zhwei820/appconfig/utils/sentry"
+	"github.com/zhwei820/appconfig/models"
 	"github.com/astaxie/beego"
-	"back/appconfig/utils/define"
+	"github.com/zhwei820/appconfig/utils/define"
 	"github.com/satori/go.uuid"
 	"github.com/astaxie/beego/context"
 )

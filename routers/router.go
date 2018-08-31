@@ -1,15 +1,15 @@
 package routers
 
 import (
-	_ "back/appconfig/utils/util"
+	_ "github.com/zhwei820/appconfig/utils/util"
 
 	"github.com/astaxie/beego"
-	"back/appconfig/services/default_service"
-	"back/appconfig/services/group_service"
+	"github.com/zhwei820/appconfig/services/default_service"
+	"github.com/zhwei820/appconfig/services/group_service"
 	_ "github.com/astaxie/beego/session/redis"
 
-	"back/appconfig/services/staffuser_service"
-	"back/appconfig/services/auth_service"
+	"github.com/zhwei820/appconfig/services/staffuser_service"
+	"github.com/zhwei820/appconfig/services/auth_service"
 )
 
 // @APIVersion 1.0.0

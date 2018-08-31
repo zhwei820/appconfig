@@ -1,18 +1,15 @@
-# Beego Api
+# Appconfig
 
-### beego restful api, jwt
+### beego restful api, jwt, appconfig
 
 ## 使用
 
-* git clone github.com/khlipeng/appconfig
-* bee run
+* git clone git@github.com:zhwei820/appconfig.git
 
-## 测试路由
-### 注册
-* POST /v1/user/reg
+* cp conf/app.dev.conf conf/app.conf
 
-### 登录
-* POST /v1/user/login
+* make install
 
-### 认证测试
-* GET /v1/user/auth
+* make rundev
+
+* make test

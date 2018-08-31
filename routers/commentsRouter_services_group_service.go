@@ -7,7 +7,7 @@ import (
 
 func init() {
 
-	beego.GlobalControllerRouter["back/appconfig/services/group_service:GroupController"] = append(beego.GlobalControllerRouter["back/appconfig/services/group_service:GroupController"],
+	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/group_service:GroupController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/group_service:GroupController"],
 		beego.ControllerComments{
 			Method: "ApiGroupList",
 			Router: `/group`,
@@ -15,7 +15,7 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["back/appconfig/services/group_service:GroupController"] = append(beego.GlobalControllerRouter["back/appconfig/services/group_service:GroupController"],
+	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/group_service:GroupController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/group_service:GroupController"],
 		beego.ControllerComments{
 			Method: "ApiCreateGroup",
 			Router: `/group`,
@@ -23,7 +23,7 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["back/appconfig/services/group_service:GroupController"] = append(beego.GlobalControllerRouter["back/appconfig/services/group_service:GroupController"],
+	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/group_service:GroupController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/group_service:GroupController"],
 		beego.ControllerComments{
 			Method: "ApiDetailGroup",
 			Router: `/group/:id`,
@@ -31,7 +31,7 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["back/appconfig/services/group_service:GroupController"] = append(beego.GlobalControllerRouter["back/appconfig/services/group_service:GroupController"],
+	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/group_service:GroupController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/group_service:GroupController"],
 		beego.ControllerComments{
 			Method: "ApiUpdateGroup",
 			Router: `/group/:id`,
@@ -39,7 +39,7 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
-	beego.GlobalControllerRouter["back/appconfig/services/group_service:GroupController"] = append(beego.GlobalControllerRouter["back/appconfig/services/group_service:GroupController"],
+	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/group_service:GroupController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/group_service:GroupController"],
 		beego.ControllerComments{
 			Method: "ApiDeleteGroup",
 			Router: `/group/:id`,
