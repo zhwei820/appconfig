@@ -28,14 +28,16 @@ func corsFilter() {
 
 func authFilter() {
 	var FilterUser = func(ctx *context.Context) {
-		et := utils.EasyToken{}
-		authtoken := strings.TrimSpace(ctx.Request.Header.Get("Authorization"))
+		test := beego.AppConfig.String("test")
+		if test != "true" { // test 不验证token
+			et := utils.EasyToken{}
+			authtoken := strings.TrimSpace(ctx.Request.Header.Get("Authorization"))
 
-		valid, _ := et.ValidateToken(authtoken, 0)
-		if !valid {
-			ctx.Redirect(302, "/view/user/login.html")
+			valid, _ := et.ValidateToken(authtoken, 0)
+			if !valid {
+				ctx.Redirect(302, "/view/user/login.html")
+			}
 		}
-
 		ctx.Request.Header.Add(define.TraceId, uuid.NewV4().String()) // trace id
 	}
 

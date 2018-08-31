@@ -22,5 +22,6 @@ func init() {
 		}
 	}
 	beego.TestBeegoInit(apppath)
-}
+	beego.AppConfig.Set("test", "true")
 
+}

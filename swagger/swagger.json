@@ -5,7 +5,6 @@
         "version": "1.0.0",
         "contact": {}
     },
-    "basePath": "/api",
     "paths": {
         "/": {
             "get": {
@@ -21,29 +20,7 @@
                 }
             }
         },
-        "/auth": {
-            "get": {
-                "tags": [
-                    "auth_serviceAuthController"
-                ],
-                "summary": "认证测试",
-                "description": "测试错误码",
-                "responses": {
-                    "200": {
-                        "description": "{string}"
-                    },
-                    "401": {
-                        "description": "unauthorized"
-                    }
-                },
-                "security": [
-                    {
-                        "jwt": []
-                    }
-                ]
-            }
-        },
-        "/group/group": {
+        "/api/group/group": {
             "get": {
                 "tags": [
                     "group"
@@ -95,7 +72,141 @@
                 }
             }
         },
-        "/group/group/{id}": {
+        "/api/staffuser/staffuser": {
+            "get": {
+                "tags": [
+                    "staffuser"
+                ],
+                "summary": "StaffUser列表",
+                "description": "StaffUser列表",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "page",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "description": "page_size",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "staffuser"
+                ],
+                "summary": "新建StaffUser",
+                "description": "新建StaffUser",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "StaffUser",
+                        "schema": {
+                            "$ref": "#/definitions/models.StaffUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    }
+                }
+            }
+        },
+        "/auth": {
+            "get": {
+                "tags": [
+                    "auth_serviceAuthController"
+                ],
+                "summary": "认证测试",
+                "description": "测试错误码",
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "auth_serviceAuthController"
+                ],
+                "summary": "登录",
+                "description": "账号登录接口",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "description": "用户昵称",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "密码",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    },
+                    "401": {
+                        "description": "No Admin"
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "tags": [
+                    "auth_serviceAuthController"
+                ],
+                "summary": "注册",
+                "description": "账号注册接口",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "StaffUser",
+                        "schema": {
+                            "$ref": "#/definitions/models.StaffUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    },
+                    "401": {
+                        "description": "No Admin"
+                    }
+                }
+            }
+        },
+        "api/group/group/{id}": {
             "get": {
                 "tags": [
                     "group"
@@ -168,119 +279,7 @@
                 }
             }
         },
-        "/login": {
-            "post": {
-                "tags": [
-                    "auth_serviceAuthController"
-                ],
-                "summary": "登录",
-                "description": "账号登录接口",
-                "parameters": [
-                    {
-                        "in": "formData",
-                        "name": "username",
-                        "description": "用户昵称",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "formData",
-                        "name": "password",
-                        "description": "密码",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{string}"
-                    },
-                    "401": {
-                        "description": "No Admin"
-                    }
-                }
-            }
-        },
-        "/register": {
-            "post": {
-                "tags": [
-                    "auth_serviceAuthController"
-                ],
-                "summary": "注册",
-                "description": "账号注册接口",
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "StaffUser",
-                        "schema": {
-                            "$ref": "#/definitions/models.StaffUser"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{string}"
-                    },
-                    "401": {
-                        "description": "No Admin"
-                    }
-                }
-            }
-        },
-        "/staffuser/staffuser": {
-            "get": {
-                "tags": [
-                    "staffuser"
-                ],
-                "summary": "StaffUser列表",
-                "description": "StaffUser列表",
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "page",
-                        "description": "page",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "page_size",
-                        "description": "page_size",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{string}"
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "staffuser"
-                ],
-                "summary": "新建StaffUser",
-                "description": "新建StaffUser",
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "StaffUser",
-                        "schema": {
-                            "$ref": "#/definitions/models.StaffUser"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{string}"
-                    }
-                }
-            }
-        },
-        "/staffuser/staffuser/{id}": {
+        "api/staffuser/staffuser/{id}": {
             "get": {
                 "tags": [
                     "staffuser"
