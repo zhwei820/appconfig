@@ -4,8 +4,6 @@ import (
 	"back/appconfig/utils/sentry"
 	"back/appconfig/models"
 	"github.com/astaxie/beego"
-	"back/appconfig/utils"
-	"strings"
 	"back/appconfig/utils/define"
 	"github.com/satori/go.uuid"
 	"github.com/astaxie/beego/context"
@@ -30,11 +28,19 @@ func authFilter() {
 	var FilterUser = func(ctx *context.Context) {
 		test := beego.AppConfig.String("test")
 		if test != "true" { // test 不验证token
-			et := utils.EasyToken{}
-			authtoken := strings.TrimSpace(ctx.Request.Header.Get("Authorization"))
 
-			valid, _ := et.ValidateToken(authtoken, 0)
-			if !valid {
+			// // token base validation
+			//	et := utils.EasyToken{}
+			//	authtoken := strings.TrimSpace(ctx.Request.Header.Get("Authorization"))
+			//
+			//	valid, _ := et.ValidateToken(authtoken, 0)
+			//	if !valid {
+			//		ctx.Redirect(302, "/view/user/login.html")
+			//	}
+
+			// session base validation
+			uid := ctx.Input.CruSession.Get("uid")
+			if uid == nil {
 				ctx.Redirect(302, "/view/user/login.html")
 			}
 		}

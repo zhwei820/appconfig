@@ -17,6 +17,16 @@ type AuthController struct {
 	BaseController
 }
 
+type LoginToken struct {
+	User  models.StaffUser `json:"user"`
+	Token string           `json:"token"`
+}
+
+type UserRegister struct {
+	Username string `json:"username" `
+	Password string `json:"password" `
+}
+
 // @Summary 登录
 // @Description 账号登录接口
 // @Param	username	formData 	string	true		"用户昵称"
@@ -24,7 +34,7 @@ type AuthController struct {
 // @Success 200 {string}
 // @Failure 401 No Admin
 // @router /login [post]
-func (this *AuthController) ApiLogin() {
+func (this *AuthController) SessionLogin() {
 
 	username := this.GetString("username")
 	password := this.GetString("password")
@@ -42,9 +52,41 @@ func (this *AuthController) ApiLogin() {
 
 }
 
+// @Summary 登录
+// @Description 账号登录接口
+// @Param	username	formData 	string	true		"用户昵称"
+// @Param	password	formData 	string	true		"密码"
+// @Success 200 {string}
+// @Failure 401 No Admin
+// @router /api_login [post]
+func (this *AuthController) ApiLogin() {
+
+	username := this.GetString("username")
+	password := this.GetString("password")
+	this.GetLogger().Msg("this is a message with trace id")
+	this.GetLogger().Msgf("username: %s try to login.", username)
+
+	user, ok := models.CheckUserAuth(username, password)
+	if !ok {
+		this.WriteJsonWithStatusCode(403, ErrUsernameOrPasswd.Code, ErrUsernameOrPasswd.Msg)
+		return
+	}
+	et := utils.EasyToken{
+		Username: user.Username,
+		Uid:      user.Id,
+		Expires:  utils.GetExpireTime(),
+	}
+	token, err := et.GetToken()
+	if err != nil {
+		this.WriteJsonWithStatusCode(500, ErrorUnkown.Code, err.Error())
+		return
+	}
+	this.WriteJson(LoginToken{user, token})
+}
+
 // @Summary 注册
 // @Description 账号注册接口
-// @Param   body  body models.StaffUser StaffUser
+// @Param   body  body auth_service.UserRegister UserRegister
 // @Success 200 {string}
 // @Failure 401 No Admin
 // @router /register [post]

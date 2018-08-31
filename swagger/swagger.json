@@ -124,6 +124,39 @@
                 }
             }
         },
+        "/api_login": {
+            "post": {
+                "tags": [
+                    "auth_serviceAuthController"
+                ],
+                "summary": "登录",
+                "description": "账号登录接口",
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "username",
+                        "description": "用户昵称",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "密码",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    },
+                    "401": {
+                        "description": "No Admin"
+                    }
+                }
+            }
+        },
         "/auth": {
             "get": {
                 "tags": [
@@ -190,9 +223,9 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "StaffUser",
+                        "description": "UserRegister",
                         "schema": {
-                            "$ref": "#/definitions/models.StaffUser"
+                            "$ref": "#/definitions/auth_service.UserRegister"
                         }
                     }
                 ],
@@ -354,6 +387,18 @@
         }
     },
     "definitions": {
+        "auth_service.UserRegister": {
+            "title": "UserRegister",
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Group": {
             "title": "Group",
             "type": "object",
@@ -391,6 +436,9 @@
                 "id": {
                     "type": "integer",
                     "format": "int64"
+                },
+                "password": {
+                    "type": "string"
                 },
                 "username": {
                     "type": "string"
