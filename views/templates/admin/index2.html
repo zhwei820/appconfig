@@ -1,3 +1,4 @@
+<!--@formatter:off-->
 {% extends 'base/userinfo.html' %}
 
 
@@ -76,7 +77,7 @@
             </div>
         </div>
 
-        
+
         <div class="layui-form-item">
             <div class="layui-input-block">
                 {% if permission.template %}
@@ -344,13 +345,9 @@
 <script src="/asset/layui/layui.js" charset="utf-8"></script>
 <script>
     layui.use(['table', "form", "laytpl"], function () {
-        var laytpl = layui.laytpl
-
-
         var $ = layui.$
         var global_templates = {}
 
-        var editor_value = "";
         var editor_config_value = "";
 
         var env = "ci"
@@ -359,8 +356,6 @@
             $.ajax({
                 url: "/global_template_list?",
                 type: 'GET',
-//                contentType: 'text/html',
-//                data: JSON.stringify({}),
                 success: function (data) {
                     var global_templates1 = data.data
                     for (var ii = 0; ii < global_templates1.length; ii++) {

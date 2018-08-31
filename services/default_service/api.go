@@ -19,6 +19,14 @@ func (this *DefaultController) ApiGetAll() {
 
 func (this *DefaultController) Html() {
 	dir := this.Ctx.Input.Param(":dir")
+	if dir != "auth" { // 前端页面需要登陆
+		uid := this.GetSession("uid")
+		if uid == nil {
+			this.Ctx.Redirect(302, "/view/auth/login.html")
+			return
+		}
+	}
+
 	html := this.Ctx.Input.Param(":html")
 	if html != "login" && html != "register" {
 		this.Layout = "templates/base/userinfo.html"

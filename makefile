@@ -18,6 +18,7 @@ clean:
 	go clean $(GOFLAGS) -i ./...
 
 rundev: build
+	bee generate docs
 	./appconfig
 
 # 测试

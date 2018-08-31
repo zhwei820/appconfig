@@ -35,13 +35,13 @@ func authFilter() {
 			//
 			//	valid, _ := et.ValidateToken(authtoken, 0)
 			//	if !valid {
-			//		ctx.Redirect(302, "/view/user/login.html")
+			//		ctx.Redirect(302, "/view/auth/login.html")
 			//	}
 
 			// session base validation
 			uid := ctx.Input.CruSession.Get("uid")
 			if uid == nil {
-				ctx.Redirect(302, "/view/user/login.html")
+				ctx.Redirect(302, "/view/auth/login.html")
 			}
 		}
 		ctx.Request.Header.Add(define.TraceId, uuid.NewV4().String()) // trace id

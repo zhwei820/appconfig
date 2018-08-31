@@ -10,7 +10,7 @@ import (
 type StaffUser struct {
 	Id       int64  `json:"id" orm:"column(id);pk;auto;unique"`
 	Username string `json:"username" orm:"column(username);unique;size(100);"`
-	Password string `json:"-" orm:"column(password);size(300)"`
+	Password string `json:"password" orm:"column(password);size(300)"`
 	Group    string `json:"group" orm:"column(group);size(100)"`
 
 	Created time.Time `json:"create_at" orm:"column(create_at);auto_now_add;type(datetime)"`

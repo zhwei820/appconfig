@@ -8,12 +8,11 @@ import (
 	"strconv"
 	"github.com/astaxie/beego"
 	"github.com/zhwei820/appconfig/utils"
-
 )
 
 var (
-	ErrPhoneIsRegis     = ErrStruct{422001, "手机用户已经注册"}
-	ErrUsernameIsRegis  = ErrStruct{422002, "用户名已经被注册"}
+	ErrPhoneIsRegis    = ErrStruct{422001, "手机用户已经注册"}
+	ErrUsernameIsRegis = ErrStruct{422002, "用户名已经被注册"}
 )
 
 type StaffUserController struct {
@@ -30,6 +29,10 @@ func (this *StaffUserController) ApiStaffUserList() {
 
 	page, _ := this.GetInt("page")
 	page_size, _ := this.GetInt("page_size")
+	if page_size == 0 {
+		page_size, _ = this.GetInt("limit")
+	}
+
 	this.GetLogger().Msg("this is a message with trace id")
 	var staffusers [] models.StaffUser
 	models.StaffUsers().Limit(page_size, (page-1)*page_size).All(&staffusers)
@@ -114,6 +117,10 @@ func (this *StaffUserController) ApiUpdateStaffUser() {
 		return
 	}
 	staffuser.Id = int64(id)
+	if staffuser.Password != "" {
+		staffuser.Password = utils.TransPassword(staffuser.Password) // 存储密码hash值
+	}
+
 	num, err := models.OrmManager().Update(&staffuser, keys...)
 	if err != nil {
 		this.WriteJsonWithStatusCode(403, ErrorDatabase.Code, err.Error())

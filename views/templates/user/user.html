@@ -1,7 +1,10 @@
+<!--@formatter:off-->
 <div id="box" style="display: none">
     <h1 class="site-h1"></h1>
 
     <form class="layui-form" action="" id="item-form">
+
+        <input type="hidden" name="id" autocomplete="off" placeholder="">
 
         <div class="layui-form-item">
             <label class="layui-form-label">用户名</label>
@@ -55,17 +58,8 @@
 
     <h1 class="site-h1">用户管理 </h1>
 
-    <table class="layui-table" lay-data="{ height: 'full', url:'/api/user/user_list', page:true, id:'idTest'}"
-           lay-filter="demo">
-        <thead>
-        <tr>
-            <th lay-data="{field:'username', sort: true, fixed: true}">用户名</th>
-            <th lay-data="{field:'groupname', sort: true, fixed: true}">分组</th>
 
-            <th lay-data="{fixed: 'right', align:'center', toolbar: '#barDemo'}">操作</th>
-        </tr>
-        </thead>
-    </table>
+    <table id="demodemo" lay-filter="demo"></table>
 
 </div>
 
@@ -83,15 +77,18 @@
         var $ = layui.$
 
         var group_list = []
+        var group_dict = {}
 
         function get_user_group_list() {
             $.ajax({
-                url: "/api/user/group_list?",
+                url: "/api/group/group?",
                 type: 'GET',
-//                contentType: 'text/html',
-//                data: JSON.stringify({}),
                 success: function (data) {
                     group_list = data.data
+
+                    for (var key in group_list) {
+                        group_dict[group_list[key].group] = group_list[key]
+                    }
 
                 },
                 error: function (xhr, type) {
@@ -103,18 +100,43 @@
         get_user_group_list()
 
         var table = layui.table;
+
+
+        //第一个实例
+        table.render({
+            elem: '#demodemo',
+            // height: 800,
+            url: '/api/staffuser/staffuser',//数据接口
+            page: true, //开启分页,
+            cols: [[ //表头
+                {field: 'username', sort: true, fixed: true, title: '用户名',},
+                {
+                    field: 'title',
+                    title: '组名',
+                    width: 200,
+                    templet: function(d){
+                        var group = group_dict[d.group]
+                        return group ? group.groupname : ""
+                      }
+                },
+                {fixed: 'right', align: 'center', toolbar: '#barDemo', title: '操作',}
+            ]],
+            limit: 20,
+            limits: [20, 50, 100],
+
+        })
+
         //监听表格复选框选择
         table.on('checkbox(demo)', function (obj) {
             console.log(obj)
         });
 
-
         //监听工具条
         table.on('tool(demo)', function (obj) {
             if (obj.event === 'del') {
                 layer.confirm("确认删除用户", {
-                    btn: ['确认', '取消']
-                    , btn3: function (index, layero) {
+                    btn: ['确认', '取消'],
+                    btn3: function (index, layero) {
 
                     }
                 }, function (index, layero) {
@@ -131,7 +153,7 @@
 
         function del_item(data) {
             $.ajax({
-                url: "/api/user/user?username=" + data['username'],
+                url: "/api/staffuser/staffuser/" + data['id'],
                 type: 'DELETE',
                 contentType: 'application/json',
                 data: JSON.stringify({}),
@@ -178,9 +200,11 @@
         //监听提交
         form.on('submit(demo1)', function (data) {
 
+            var id = data.field.id
+            delete data.field.id
             $.ajax({
-                url: "/api/user/modify_user_admin",
-                type: "POST",
+                url: "/api/staffuser/staffuser/" + id,
+                type: "put",
                 contentType: 'application/json',
                 data: JSON.stringify(data.field),
                 success: function (_data) {

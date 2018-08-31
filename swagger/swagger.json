@@ -72,6 +72,79 @@
                 }
             }
         },
+        "/api/group/group/{id}": {
+            "get": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "用户组",
+                "description": "用户组",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "更新用户组",
+                "description": "更新用户组 (支持部分更新)",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "用户组",
+                        "schema": {
+                            "$ref": "#/definitions/models.Group"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "group"
+                ],
+                "summary": "删除用户组",
+                "description": "删除用户组",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    }
+                }
+            }
+        },
         "/api/staffuser/staffuser": {
             "get": {
                 "tags": [
@@ -115,6 +188,79 @@
                         "schema": {
                             "$ref": "#/definitions/models.StaffUser"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    }
+                }
+            }
+        },
+        "/api/staffuser/staffuser/{id}": {
+            "get": {
+                "tags": [
+                    "staffuser"
+                ],
+                "summary": "StaffUser",
+                "description": "StaffUser",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "staffuser"
+                ],
+                "summary": "更新StaffUser",
+                "description": "更新StaffUser (支持部分更新)",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "StaffUser",
+                        "schema": {
+                            "$ref": "#/definitions/models.StaffUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "staffuser"
+                ],
+                "summary": "删除StaffUser",
+                "description": "删除StaffUser",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "id",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -212,6 +358,23 @@
                 }
             }
         },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "auth_serviceAuthController"
+                ],
+                "summary": "登出",
+                "description": "账号登出接口",
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    },
+                    "401": {
+                        "description": "No Admin"
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "tags": [
@@ -235,152 +398,6 @@
                     },
                     "401": {
                         "description": "No Admin"
-                    }
-                }
-            }
-        },
-        "api/group/group/{id}": {
-            "get": {
-                "tags": [
-                    "group"
-                ],
-                "summary": "用户组",
-                "description": "用户组",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "id",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{string}"
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "group"
-                ],
-                "summary": "更新用户组",
-                "description": "更新用户组 (支持部分更新)",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "id",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "用户组",
-                        "schema": {
-                            "$ref": "#/definitions/models.Group"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{string}"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "group"
-                ],
-                "summary": "删除用户组",
-                "description": "删除用户组",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "id",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{string}"
-                    }
-                }
-            }
-        },
-        "api/staffuser/staffuser/{id}": {
-            "get": {
-                "tags": [
-                    "staffuser"
-                ],
-                "summary": "StaffUser",
-                "description": "StaffUser",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "id",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{string}"
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "staffuser"
-                ],
-                "summary": "更新StaffUser",
-                "description": "更新StaffUser (支持部分更新)",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "id",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "StaffUser",
-                        "schema": {
-                            "$ref": "#/definitions/models.StaffUser"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{string}"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "staffuser"
-                ],
-                "summary": "删除StaffUser",
-                "description": "删除StaffUser",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "id",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{string}"
                     }
                 }
             }
@@ -456,15 +473,11 @@
     },
     "tags": [
         {
-            "name": "back/appconfig/services/default_serviceDefaultController",
+            "name": "github.com/zhwei820/appconfig/services/default_serviceDefaultController",
             "description": "Operations about object\n"
         },
         {
-            "name": "back/appconfig/services/default_serviceDefaultController",
-            "description": "Operations about object\n"
-        },
-        {
-            "name": "back/appconfig/services/default_serviceDefaultController",
+            "name": "github.com/zhwei820/appconfig/services/default_serviceDefaultController",
             "description": "Operations about object\n"
         }
     ]

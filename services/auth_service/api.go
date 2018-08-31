@@ -52,6 +52,18 @@ func (this *AuthController) SessionLogin() {
 
 }
 
+// @Summary 登出
+// @Description 账号登出接口
+// @Success 200 {string}
+// @Failure 401 No Admin
+// @router /logout [post]
+func (this *AuthController) SessionLogout() {
+
+	this.DelSession("uid")
+	this.Redirect("/view/auth/login.html", 302)
+
+}
+
 // @Summary 登录
 // @Description 账号登录接口
 // @Param	username	formData 	string	true		"用户昵称"

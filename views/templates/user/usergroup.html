@@ -1,3 +1,5 @@
+<!--@formatter:off-->
+
 <meta charset="utf-8">
 <title>用户组管理 管理界面</title>
 <meta name="renderer" content="webkit">
@@ -82,17 +84,9 @@
     <h1 class="site-h1">分组管理 </h1>
     <button id="create_item" class="layui-btn">新建分组</button>
 
-    <table class="layui-table" lay-data="{ height: 'full', url:'/api/user/group_list', page:true, id:'idTest'}"
-           lay-filter="demo">
-        <thead>
-        <tr>
-            <th lay-data="{field:'groupname', sort: true, fixed: true}">分组名称</th>
-            <th lay-data="{field:'group', sort: true, fixed: true}">分组</th>
 
-            <th lay-data="{fixed: 'right', align:'center', toolbar: '#barDemo'}">操作</th>
-        </tr>
-        </thead>
-    </table>
+    <table id="demodemo" lay-filter="demo"></table>
+
 
 </div>
 
@@ -110,11 +104,26 @@
         var $ = layui.$
 
         var table = layui.table;
+
+        //第一个实例
+        table.render({
+            elem: '#demodemo',
+            height: 'full-300',
+            url: '/api/group/group',//数据接口
+            page: true, //开启分页,
+            cols: [[ //表头
+                {field:'groupname', sort: true, fixed: true, title: '组名',},
+                {fixed: 'right', align: 'center', toolbar: '#barDemo', title: '操作',}
+            ]],
+            limit: 20,
+            limits: [20, 50, 100],
+
+        })
+
         //监听表格复选框选择
         table.on('checkbox(demo)', function (obj) {
             console.log(obj)
         });
-
 
         //监听工具条
         table.on('tool(demo)', function (obj) {
