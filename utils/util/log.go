@@ -55,9 +55,8 @@ func initLogRotate(fname string) {
 
 	go func() {
 		for t := range ticker.C {
-			fmt.Printf("Backup at %s\n", t)
+			fmt.Printf("log rotate at %s\n", t)
 			NewLogrotate(fname, 0, 10, 100, false, refreshLogger) //
-
 		}
 	}()
 

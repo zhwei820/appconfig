@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"github.com/astaxie/beego"
 	"github.com/zhwei820/appconfig/utils"
+
 	_ "github.com/astaxie/beego/session/redis"
 )
 
