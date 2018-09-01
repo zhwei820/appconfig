@@ -26,10 +26,11 @@ func main() {
 	beego.BConfig.ServerName = "snail server 1.0"
 
 	beego.Run()
+
 }
 
 func destroy() {
-	if err := util.OpFile.Close(); err != nil {
-		util.OpFile.Close()
-	}
+	util.Destroy()
+
+
 }

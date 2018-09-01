@@ -1,5 +1,7 @@
 package misc
 
+// deprecate !!
+
 import (
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego"

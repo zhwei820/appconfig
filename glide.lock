@@ -1,5 +1,5 @@
-hash: f8fb21f318d042ccedfbcd2952a06abb68a600011b18e12d2dbb3f87fee7aba6
-updated: 2018-08-29T09:30:54.980587352+08:00
+hash: 72b46683f16c30ceb150156d80831bde4a3eef25bac2262b1b0b998e2aa326af
+updated: 2018-09-01T11:34:47.045258842+08:00
 imports:
 - name: github.com/astaxie/beego
   version: 053a075344c118a5cc41981b29ef612bb53d20ca
@@ -22,7 +22,7 @@ imports:
 - name: github.com/dgrijalva/jwt-go
   version: 06ea1031745cb8b3dab3f6a236daf2b0aa468b7e
 - name: github.com/francoispqt/gojay
-  version: a5068885b61dc3bbf5c753d34a3e2647772d3a00
+  version: f5587822347e46494d4d53e918709c4db4ec2de2
 - name: github.com/getsentry/raven-go
   version: 7535a8fa2ace0ffb684b19f28d00655459ea2dae
 - name: github.com/go-sql-driver/mysql
@@ -32,6 +32,8 @@ imports:
   subpackages:
   - internal
   - redis
+- name: github.com/immortal/logrotate
+  version: 6f52ae74e103a0691e70ae31d82c0d99ab9ba973
 - name: github.com/pkg/errors
   version: 816c9085562cd7ee03e7f8188a1cfd942858cded
 - name: github.com/rs/zerolog
