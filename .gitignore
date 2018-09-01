@@ -2,6 +2,8 @@
 /lastupdate.tmp
 /*.tmp
 .idea
+*.log.*
+*.log
 data
 vendor
 deploy/appconfig
