@@ -7,6 +7,7 @@ import (
 	. "github.com/zhwei820/appconfig/services/base_service"
 	. "github.com/zhwei820/appconfig/utils/error_define"
 	"github.com/zhwei820/appconfig/services/staffuser_service"
+	"github.com/bitly/go-simplejson"
 )
 
 var (
@@ -22,10 +23,6 @@ type LoginToken struct {
 	Token string           `json:"token"`
 }
 
-type UserRegister struct {
-	Username string `json:"username" `
-	Password string `json:"password" `
-}
 
 // @Summary 登录
 // @Description 账号登录接口
@@ -72,9 +69,10 @@ func (this *AuthController) SessionLogout() {
 // @Failure 401 No Admin
 // @router /api_login [post]
 func (this *AuthController) ApiLogin() {
+	j, _ := simplejson.NewJson(this.Ctx.Input.RequestBody)
+	username := j.Get("username").MustString()
+	password := j.Get("password").MustString()
 
-	username := this.GetString("username")
-	password := this.GetString("password")
 	this.GetLogger().Msg("this is a message with trace id")
 	this.GetLogger().Msgf("username: %s try to login.", username)
 
@@ -98,7 +96,7 @@ func (this *AuthController) ApiLogin() {
 
 // @Summary 注册
 // @Description 账号注册接口
-// @Param   body  body auth_service.UserRegister UserRegister
+// @Param   body  body extra.UserRegister UserRegister
 // @Success 200 {string}
 // @Failure 401 No Admin
 // @router /register [post]

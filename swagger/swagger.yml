@@ -255,14 +255,14 @@ paths:
         name: body
         description: UserRegister
         schema:
-          $ref: '#/definitions/auth_service.UserRegister'
+          $ref: '#/definitions/extra.UserRegister'
       responses:
         "200":
           description: '{string}'
         "401":
           description: No Admin
 definitions:
-  auth_service.UserRegister:
+  extra.UserRegister:
     title: UserRegister
     type: object
     properties:

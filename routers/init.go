@@ -4,6 +4,7 @@ import (
 	"github.com/zhwei820/appconfig/utils/sentry"
 	"github.com/zhwei820/appconfig/models"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/plugins/cors"
 	"github.com/zhwei820/appconfig/utils/define"
 	"github.com/satori/go.uuid"
 	"github.com/astaxie/beego/context"
@@ -17,11 +18,12 @@ func BaseInit() {
 	authFilter()
 }
 func corsFilter() {
-	corsHandler := func(ctx *context.Context) {
-		ctx.Output.Header("Access-Control-Allow-Origin", ctx.Input.Domain())
-		ctx.Output.Header("Access-Control-Allow-Methods", "*")
-	}
-	beego.InsertFilter("*", beego.BeforeRouter, corsHandler)
+	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
+		AllowAllOrigins: true,
+		AllowMethods:    []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:    []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Content-Type"},
+		ExposeHeaders:   []string{"Content-Length", "Access-Control-Allow-Origin"},
+	}))
 }
 
 func authFilter() {

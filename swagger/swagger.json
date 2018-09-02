@@ -388,7 +388,7 @@
                         "name": "body",
                         "description": "UserRegister",
                         "schema": {
-                            "$ref": "#/definitions/auth_service.UserRegister"
+                            "$ref": "#/definitions/extra.UserRegister"
                         }
                     }
                 ],
@@ -404,7 +404,7 @@
         }
     },
     "definitions": {
-        "auth_service.UserRegister": {
+        "extra.UserRegister": {
             "title": "UserRegister",
             "type": "object",
             "properties": {

@@ -21,10 +21,10 @@ func init() {
 	BaseInit()
 
 	beego.Router("/", &default_service.DefaultController{}, "*:ApiGetAll")
-	beego.Router("/register", &auth_service.AuthController{}, "POST:ApiRegister")
-	beego.Router("/api_login", &auth_service.AuthController{}, "POST:ApiLogin")
-	beego.Router("/login", &auth_service.AuthController{}, "POST:SessionLogin")
-	beego.Router("/logout", &auth_service.AuthController{}, "POST:SessionLogout")
+	beego.Router("/register", &auth_service.AuthController{}, "post:ApiRegister")
+	beego.Router("/api_login", &auth_service.AuthController{}, "post:ApiLogin")
+	beego.Router("/login", &auth_service.AuthController{}, "post:SessionLogin")
+	beego.Router("/logout", &auth_service.AuthController{}, "post:SessionLogout")
 
 	beego.Router("/view/:dir([\\w]+)/:html([\\w]+).html", &default_service.DefaultController{}, "*:Html")
 	ns := beego.NewNamespace("/api",

@@ -7,3 +7,4 @@
 data
 vendor
 deploy/appconfig
+ui/node_modules
