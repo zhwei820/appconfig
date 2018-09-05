@@ -13,8 +13,15 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     if (store.getters.token) {
-      config.headers['X-Token1'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+      // 让每个请求携带自定义token 请根据实际情况自行修改
+      Object.defineProperty(config.headers, 'Authorization', {
+        value: getToken(),
+        configurable: true,
+        enumerable: true,
+        writable: true
+      })
     }
+
     return config
   },
   error => {
