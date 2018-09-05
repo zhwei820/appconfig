@@ -8,6 +8,8 @@ import (
 	"github.com/zhwei820/appconfig/utils/define"
 	"github.com/satori/go.uuid"
 	"github.com/astaxie/beego/context"
+	"github.com/zhwei820/appconfig/utils"
+	"strings"
 )
 
 func BaseInit() {
@@ -32,19 +34,19 @@ func authFilter() {
 		if test != "true" { // test 不验证token
 
 			// // token base validation
-			//	et := utils.EasyToken{}
-			//	authtoken := strings.TrimSpace(ctx.Request.Header.Get("Authorization"))
-			//
-			//	valid, _ := et.ValidateToken(authtoken, 0)
-			//	if !valid {
-			//		ctx.Redirect(302, "/view/auth/login.html")
-			//	}
+			et := utils.EasyToken{}
+			authtoken := strings.TrimSpace(ctx.Request.Header.Get("Authorization"))
 
-			// session base validation
-			uid := ctx.Input.CruSession.Get("uid")
-			if uid == nil {
+			valid, _ := et.ValidateToken(authtoken, 0)
+			if !valid {
 				ctx.Redirect(302, "/view/auth/login.html")
 			}
+
+			// // session base validation
+			//uid := ctx.Input.CruSession.Get("uid")
+			//if uid == nil {
+			//	ctx.Redirect(302, "/view/auth/login.html")
+			//}
 		}
 		ctx.Request.Header.Add(define.TraceId, uuid.NewV4().String()) // trace id
 	}

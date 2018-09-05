@@ -9,6 +9,14 @@ func init() {
 
 	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"],
 		beego.ControllerComments{
+			Method: "ApiGetUser",
+			Router: `/info`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"] = append(beego.GlobalControllerRouter["github.com/zhwei820/appconfig/services/staffuser_service:StaffUserController"],
+		beego.ControllerComments{
 			Method: "ApiStaffUserList",
 			Router: `/staffuser`,
 			AllowHTTPMethods: []string{"get"},

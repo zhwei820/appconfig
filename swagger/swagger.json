@@ -145,6 +145,25 @@
                 }
             }
         },
+        "/api/staffuser/info": {
+            "get": {
+                "tags": [
+                    "staffuser"
+                ],
+                "summary": "获取StaffUser",
+                "description": "获取StaffUser",
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
         "/api/staffuser/staffuser": {
             "get": {
                 "tags": [
@@ -279,18 +298,12 @@
                 "description": "账号登录接口",
                 "parameters": [
                     {
-                        "in": "formData",
-                        "name": "username",
-                        "description": "用户昵称",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "formData",
-                        "name": "password",
-                        "description": "密码",
-                        "required": true,
-                        "type": "string"
+                        "in": "body",
+                        "name": "body",
+                        "description": "UserRegister",
+                        "schema": {
+                            "$ref": "#/definitions/extra.UserRegister"
+                        }
                     }
                 ],
                 "responses": {

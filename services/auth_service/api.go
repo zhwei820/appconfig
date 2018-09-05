@@ -63,8 +63,7 @@ func (this *AuthController) SessionLogout() {
 
 // @Summary 登录
 // @Description 账号登录接口
-// @Param	username	formData 	string	true		"用户昵称"
-// @Param	password	formData 	string	true		"密码"
+// @Param   body  body extra.UserRegister UserRegister
 // @Success 200 {string}
 // @Failure 401 No Admin
 // @router /api_login [post]
@@ -82,7 +81,6 @@ func (this *AuthController) ApiLogin() {
 		return
 	}
 	et := utils.EasyToken{
-		Username: user.Username,
 		Uid:      user.Id,
 		Expires:  utils.GetExpireTime(),
 	}
