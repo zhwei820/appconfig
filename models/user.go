@@ -5,6 +5,8 @@ import (
 	"time"
 	"github.com/zhwei820/appconfig/utils"
 	"github.com/astaxie/beego/logs"
+	"fmt"
+	"strings"
 )
 
 type StaffUser struct {
@@ -83,4 +85,23 @@ func CheckUserAuth(username string, password string) (StaffUser, bool) {
 		return user, false
 	}
 	return user, true
+}
+
+// 获取用户和权限
+func GetUserAndPermission(uid int64) orm.Params {
+	sql := "SELECT a.id, a.username, a.password, a.group, a.create_at, a.update_at, " +
+		"b.permission FROM user a INNER JOIN `group` b ON a.group = b.group WHERE a.id = ?;"
+
+	var maps []orm.Params
+	num, err := OrmManager().Raw(sql, uid).Values(&maps)
+	if err == nil && num > 0 {
+		fmt.Println(maps[0]["username"]) // slene
+	}
+	if len(maps) > 0 {
+		userinfo := maps[0]
+		userinfo["permission"] = strings.Split(userinfo["permission"].(string), ",")
+		return userinfo
+	}
+
+	return orm.Params{}
 }

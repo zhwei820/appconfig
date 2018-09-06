@@ -154,18 +154,14 @@ func (this *StaffUserController) ApiDeleteStaffUser() {
 
 }
 
-
 // @Summary 获取StaffUser
 // @Description 获取StaffUser
 // @Success 200 {string}
 // @router /info [get]
 // @Security jwt
 func (this *StaffUserController) ApiGetUser() {
-	user, err:=this.GetUser()
-	if err != nil {
-		this.WriteJsonWithStatusCode(403, ErrorDatabase.Code, err.Error())
-		return
-	}
-	this.WriteJson(user)
+	uid := this.GetUser()
+	userinfo := models.GetUserAndPermission(uid)
 
+	this.WriteJson(userinfo)
 }
