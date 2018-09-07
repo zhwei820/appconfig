@@ -1,351 +1,323 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input :placeholder="table.title" v-model="listQuery.title" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-select v-model="listQuery.importance" :placeholder="table.importance" clearable style="width: 90px" class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item"/>
-      </el-select>
-      <el-select v-model="listQuery.type" :placeholder="table.type" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key"/>
-      </el-select>
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key"/>
-      </el-select>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ table.search }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ table.add }}</el-button>
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">{{ table.export }}</el-button>
-      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">{{ table.reviewer }}</el-checkbox>
+    <vuetable
+      ref="vuetable"
+      :fields="fields"
+      :table-height="tableHeight"
+      :row-class="rowClassCB"
+      :sort-order="sortOrder"
+      :multi-sort="multiSort"
+      :per-page="perPage"
+      :append-params="moreParams"
+      pagination-path="pagination"
+      api-url="http://vuetable.ratiw.net/api/users"
+      detail-row-component="my-detail-row"
+      detail-row-transition="expand"
+      @vuetable:pagination-data="onPaginationData"
+      @vuetable:load-success="onLoadSuccess"
+      @vuetable:loading="showLoader"
+      @vuetable:loaded="hideLoader"
+      @vuetable:cell-clicked="onCellClicked"
+      @vuetable:initialized="onInitialized"
+      @vuetable:data-reset="onDataReset">
+      <template slot="actions" slot-scope="props">
+        <div class="custom-actions">
+          <button class="ui basic button" @click="onAction('view-item', props.rowData, props.rowIndex)">
+            <i class="zoom icon"/>
+          </button>
+          <button class="ui basic button" @click="onAction('edit-item', props.rowData, props.rowIndex)">
+            <i class="edit icon"/>
+          </button>
+          <button class="ui basic button" @click="onAction('delete-item', props.rowData, props.rowIndex)">
+            <i class="delete icon"/>
+          </button>
+        </div>
+      </template>
+    </vuetable>
+    <div class="vuetable-pagination ui bottom attached segment grid">
+      <vuetable-pagination-info ref="paginationInfo" :info-template="paginationInfoTemplate"/>
+      <component ref="pagination" :is="paginationComponent" @vuetable-pagination:change-page="onChangePage"/>
     </div>
-
-    <el-table
-      v-loading="listLoading"
-      :key="tableKey"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%;min-height:1000px;">
-      <el-table-column :label="table.id" align="center" width="65">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="table.date" width="150px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="table.title" min-width="150px">
-        <template slot-scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.title }}</span>
-          <el-tag>{{ scope.row.type | typeFilter }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column :label="table.author" width="110px" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column v-if="showReviewer" :label="table.reviewer" width="110px" align="center">
-        <template slot-scope="scope">
-          <span style="color:red;">{{ scope.row.reviewer }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="table.importance" width="80px">
-        <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon"/>
-        </template>
-      </el-table-column>
-      <el-table-column :label="table.readings" align="center" width="95">
-        <template slot-scope="scope">
-          <span v-if="scope.row.pageviews" class="link-type" @click="handleFetchPv(scope.row.pageviews)">{{ scope.row.pageviews }}</span>
-          <span v-else>0</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="table.status" class-name="status-col" width="100">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column :label="table.actions" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ table.edit }}</el-button>
-          <el-button v-if="scope.row.status!='published'" size="mini" type="success" @click="handleModifyStatus(scope.row,'published')">{{ table.publish }}
-          </el-button>
-          <el-button v-if="scope.row.status!='draft'" size="mini" @click="handleModifyStatus(scope.row,'draft')">{{ table.draft }}
-          </el-button>
-          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleModifyStatus(scope.row,'deleted')">{{ table.delete }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <div class="pagination-container">
-      <el-pagination :current-page="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" :total="total" background layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"/>
-    </div>
-
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
-        <el-form-item :label="table.type" prop="type">
-          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name" :value="item.key"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="table.date" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date"/>
-        </el-form-item>
-        <el-form-item :label="table.title" prop="title">
-          <el-input v-model="temp.title"/>
-        </el-form-item>
-        <el-form-item :label="table.status">
-          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="table.importance">
-          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3" style="margin-top:8px;"/>
-        </el-form-item>
-        <el-form-item :label="table.remark">
-          <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.remark" type="textarea" placeholder="Please input"/>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ table.cancel }}</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{ table.confirm }}</el-button>
-        <el-button v-else type="primary" @click="updateData">{{ table.confirm }}</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="Channel"/>
-        <el-table-column prop="pv" label="Pv"/>
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">{{ table.confirm }}</el-button>
-      </span>
-    </el-dialog>
-
   </div>
 </template>
 
 <script>
-import { fetchList, createUser, updateUser } from '@/api/user'
-import waves from '@/directive/waves' // 水波纹指令
-import { parseTime } from '@/utils'
+import Vuetable from 'vuetable-2/src/components/Vuetable'
+import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
+import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
+// import { fetchList, createUser, updateUser } from '@/api/user'
+import { Message } from 'element-ui'
 
-const calendarTypeOptions = [
-  { key: 'CN', display_name: 'China' },
-  { key: 'US', display_name: 'USA' },
-  { key: 'JP', display_name: 'Japan' },
-  { key: 'EU', display_name: 'Eurozone' }
+const lang = {
+  'nickname': 'Nickname',
+  'birthdate': 'Birthdate'
+}
+
+const tableColumns = [
+  {
+    name: '__sequence',
+    title: 'No.',
+    titleClass: 'right aligned',
+    dataClass: 'right aligned',
+    width: '50px'
+  },
+  {
+    name: '__checkbox',
+    width: '30px',
+    title: 'checkbox',
+    titleClass: 'center aligned',
+    dataClass: 'center aligned'
+  },
+  {
+    name: 'id',
+    title: '<i class="unordered list icon"></i> Detail',
+    dataClass: 'center aligned',
+    width: '100px',
+    callback: 'showDetailRow'
+
+  },
+  {
+    name: 'name',
+    title: '<i class="book icon"></i> Full Name',
+    sortField: 'name',
+    width: '150px'
+  },
+  {
+    name: 'email',
+    title: '<i class="mail outline icon"></i> Email',
+    sortField: 'email',
+    width: '200px',
+    dataClass: 'vuetable-clip-text',
+    visible: true
+  },
+  {
+    name: 'nickname',
+    title: (nameOnly = false) => {
+      return nameOnly
+        ? lang['nickname']
+        : `<i class="paw icon"></i> ${lang['nickname']}`
+    },
+    sortField: 'nickname',
+    callback: 'allCap',
+    width: '120px'
+  },
+  {
+    name: 'birthdate',
+    title: (nameOnly = false) => {
+      return nameOnly
+        ? lang['birthdate']
+        : `<i class="orange birthday icon"></i> ${lang['birthdate']}`
+    },
+    sortField: 'birthdate',
+    width: '100px',
+    callback: 'formatDate|D/MM/Y'
+  },
+  {
+    name: 'gender',
+    title: 'Gender',
+    sortField: 'gender',
+    titleClass: 'center aligned',
+    dataClass: 'center aligned',
+    callback: 'gender',
+    width: '100px'
+  },
+  {
+    name: '__slot:actions', // <----
+    title: 'Actions',
+    titleClass: 'center aligned',
+    dataClass: 'center aligned',
+    width: '150px'
+  }
 ]
-
-// arr to obj ,such as { CN : "China", US : "USA" }
-const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
 
 export default {
   name: 'ComplexTable',
-  directives: {
-    waves
+  components: {
+    Vuetable,
+    VuetablePagination,
+    VuetablePaginationInfo
   },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    },
-    typeFilter(type) {
-      return calendarTypeKeyValue[type]
-    }
-  },
-  data() {
+  data: function() {
     return {
-      tableKey: 0,
-      list: null,
-      total: null,
-      listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
-      },
-      importanceOptions: [1, 2, 3],
-      calendarTypeOptions,
-      sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
-      statusOptions: ['published', 'draft', 'deleted'],
-      showReviewer: false,
-      temp: {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        type: '',
-        status: 'published'
-      },
-      dialogFormVisible: false,
-      dialogStatus: '',
-      textMap: {
-        update: 'Edit',
-        create: 'Create'
-      },
-      dialogPvVisible: false,
-      pvData: [],
-      rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
-      },
-      downloadLoading: false
+      loading: '',
+      searchFor: '',
+      moreParams: { aa: 1111, bb: 222 },
+      fields: tableColumns,
+      tableHeight: '600px',
+      vuetableFields: false,
+      sortOrder: [{
+        field: 'name',
+        direction: 'asc'
+      }],
+      multiSort: true,
+      paginationComponent: 'vuetable-pagination',
+      perPage: 10,
+      paginationInfoTemplate: '',
+      // paginationInfoTemplate: 'Showing record: {from} to {to} from {total} item(s)',
+      lang: lang
     }
   },
-  created() {
-    this.getList()
+  watch: {
+    'perPage'(val, oldVal) {
+      this.$nextTick(function() {
+        this.$refs.vuetable.refresh()
+      })
+    },
+    'paginationComponent'(val, oldVal) {
+      this.$nextTick(function() {
+        this.$refs.pagination.setPaginationData(this.$refs.vuetable.tablePagination)
+      })
+    }
   },
   methods: {
-    getList() {
-      this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data
-        this.total = response.count
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+    transform(data) {
+      const transformed = {}
+      transformed.pagination = {
+        total: data.total,
+        per_page: data.per_page,
+        current_page: data.current_page,
+        last_page: data.last_page,
+        next_page_url: data.next_page_url,
+        prev_page_url: data.prev_page_url,
+        from: data.from,
+        to: data.to
+      }
+
+      transformed.data = []
+      data = data.data
+      for (let i = 0; i < data.length; i++) {
+        transformed['data'].push({
+          id: data[i].id,
+          name: data[i].name,
+          nickname: data[i].nickname,
+          email: data[i].email,
+          age: data[i].age,
+          birthdate: data[i].birthdate,
+          gender: data[i].gender,
+          address: data[i].address.line1 + ' ' + data[i].address.line2 + ' ' + data[i].address.zipcode
+        })
+      }
+
+      return transformed
+    },
+    showLoader() {
+      this.loading = 'loading'
+    },
+    hideLoader() {
+      this.loading = ''
+    },
+    allCap(value) {
+      return value.toUpperCase()
+    },
+    formatDate(value, fmt) {
+      if (value === null) return ''
+      fmt = (typeof (fmt) === 'undefined') ? 'D MMM YYYY' : fmt
+      return value
+    },
+    gender(value) {
+      return value === 'M'
+        ? '<span class="ui teal label"><i class="male icon"></i>Male</span>'
+        : '<span class="ui pink label"><i class="female icon"></i>Female</span>'
+    },
+    showDetailRow(value) {
+      const icon = this.$refs.vuetable.isVisibleDetailRow(value) ? 'down' : 'right'
+      return [
+        '<a class="show-detail-row">',
+        '<i class="chevron circle ' + icon + ' icon"></i>',
+        '</a>'
+      ].join('')
+    },
+    setFilter() {
+      this.moreParams['filter'] = this.searchFor
+      this.$nextTick(function() {
+        this.$refs.vuetable.refresh()
       })
     },
-    handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+    resetFilter() {
+      this.searchFor = ''
+      this.setFilter()
     },
-    handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
+    preg_quote(str) {
+      // http://kevin.vanzonneveld.net
+      // +   original by: booeyOH
+      // +   improved by: Ates Goral (http://magnetiq.com)
+      // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+      // +   bugfixed by: Onno Marsman
+      // *     example 1: preg_quote("$40");
+      // *     returns 1: '\$40'
+      // *     example 2: preg_quote("*RRRING* Hello?");
+      // *     returns 2: '\*RRRING\* Hello\?'
+      // *     example 3: preg_quote("\\.+*?[^]$(){}=!<>|:");
+      // *     returns 3: '\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:'
+
+      return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, '\\$1')
     },
-    handleCurrentChange(val) {
-      this.listQuery.page = val
-      this.getList()
+    highlight(needle, haystack) {
+      return haystack.replace(
+        new RegExp('(' + this.preg_quote(needle) + ')', 'ig'),
+        '<span class="highlight">$1</span>'
+      )
     },
-    handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
-      row.status = status
+    rowClassCB(data, index) {
+      return (index % 2) === 0 ? 'odd' : 'even'
     },
-    resetTemp() {
-      this.temp = {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        title: '',
-        status: 'published',
-        type: ''
+    /*
+     * Example of defining queryParams as a function
+     */
+    // queryParams (sortOrder, currentPage, perPage) {
+    //   return {
+    //     'sort': sortOrder[0].field + '|' + sortOrder[0].direction,
+    //     'order': sortOrder[0].direction,
+    //     'page': currentPage,
+    //     'per_page': perPage
+    //   }
+    // },
+    onCellClicked(data, field, event) {
+      console.log('cellClicked', field.name)
+    },
+    onCellDoubleClicked(data, field, event) {
+      console.log('cellDoubleClicked:', field.name)
+    },
+    onCellRightClicked(data, field, event) {
+      console.log('cellRightClicked:', field.name)
+    },
+    onLoadSuccess(response) {
+      // set pagination data to pagination-info component
+      this.$refs.paginationInfo.setPaginationData(response.data)
+
+      const data = response.data.data
+      if (this.searchFor !== '') {
+        for (const n in data) {
+          data[n].name = this.highlight(this.searchFor, data[n].name)
+          data[n].email = this.highlight(this.searchFor, data[n].email)
+        }
       }
     },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+    onLoadError(response) {
+      if (response.status === 400) {
+        Message.warning('Something\'s Wrong!', response.data.message, 'error')
+      } else {
+        Message.warning('Oops', 'oooo', 'error')
+      }
     },
-    createData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          createUser(this.temp).then(() => {
-            this.list.unshift(this.temp)
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
+    onPaginationData(tablePagination) {
+      this.$refs.paginationInfo.setPaginationData(tablePagination)
+      this.$refs.pagination.setPaginationData(tablePagination)
     },
-    handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+    onChangePage(page) {
+      this.$refs.vuetable.changePage(page)
     },
-    updateData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateUser(tempData).then(() => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
-                break
-              }
-            }
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
+    onInitialized(fields) {
+      console.log('onInitialized', fields)
+      this.vuetableFields = fields
     },
-    handleDelete(row) {
-      this.$notify({
-        title: '成功',
-        message: '删除成功',
-        type: 'success',
-        duration: 2000
-      })
-      const index = this.list.indexOf(row)
-      this.list.splice(index, 1)
+    onDataReset() {
+      console.log('onDataReset')
+      this.$refs.paginationInfo.resetData()
+      this.$refs.pagination.resetData()
     },
-    handleFetchPv(pv) {},
-    handleDownload() {
-      this.downloadLoading = true
-      import('@/vendors/Export2Excel').then(excel => {
-        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-        const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-        const data = this.formatJson(filterVal, this.list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'table-list'
-        })
-        this.downloadLoading = false
-      })
-    },
-    formatJson(filterVal, jsonData) {
-      return jsonData.map(v => filterVal.map(j => {
-        if (j === 'timestamp') {
-          return parseTime(v[j])
-        } else {
-          return v[j]
-        }
-      }))
+    onAction(action, data, index) {
+      console.log('slot) action: ' + action, data, data.name, index)
     }
   }
 }
