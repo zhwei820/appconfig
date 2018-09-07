@@ -7,10 +7,9 @@
       :row-class="rowClassCB"
       :sort-order="sortOrder"
       :multi-sort="multiSort"
-      :per-page="perPage"
-      :append-params="moreParams"
+      :api-mode="false"
+      :data="transformed"
       pagination-path="pagination"
-      api-url="http://vuetable.ratiw.net/api/users"
       detail-row-component="my-detail-row"
       detail-row-transition="expand"
       @vuetable:pagination-data="onPaginationData"
@@ -46,11 +45,11 @@ import Vuetable from 'vuetable-2/src/components/Vuetable'
 import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 // import { fetchList, createUser, updateUser } from '@/api/user'
+import { fetchList } from '@/api/user'
 import { Message } from 'element-ui'
 
 const lang = {
-  'nickname': 'Nickname',
-  'birthdate': 'Birthdate'
+  'create_at': 'create_at'
 }
 
 const tableColumns = [
@@ -74,41 +73,29 @@ const tableColumns = [
     dataClass: 'center aligned',
     width: '100px',
     callback: 'showDetailRow'
-
   },
   {
-    name: 'name',
-    title: '<i class="book icon"></i> Full Name',
-    sortField: 'name',
+    name: 'username',
+    title: '<i class="book icon"></i> username',
+    sortField: 'username',
     width: '150px'
   },
   {
-    name: 'email',
-    title: '<i class="mail outline icon"></i> Email',
-    sortField: 'email',
+    name: 'group',
+    title: '<i class="mail outline icon"></i> group',
+    sortField: 'group',
     width: '200px',
     dataClass: 'vuetable-clip-text',
     visible: true
   },
   {
-    name: 'nickname',
+    name: 'create_at',
     title: (nameOnly = false) => {
       return nameOnly
-        ? lang['nickname']
-        : `<i class="paw icon"></i> ${lang['nickname']}`
+        ? lang['create_at']
+        : `<i class="orange birthday icon"></i> ${lang['create_at']}`
     },
-    sortField: 'nickname',
-    callback: 'allCap',
-    width: '120px'
-  },
-  {
-    name: 'birthdate',
-    title: (nameOnly = false) => {
-      return nameOnly
-        ? lang['birthdate']
-        : `<i class="orange birthday icon"></i> ${lang['birthdate']}`
-    },
-    sortField: 'birthdate',
+    sortField: 'create_at',
     width: '100px',
     callback: 'formatDate|D/MM/Y'
   },
@@ -139,6 +126,7 @@ export default {
   },
   data: function() {
     return {
+      transformed: {},
       loading: '',
       searchFor: '',
       moreParams: { aa: 1111, bb: 222 },
@@ -146,59 +134,68 @@ export default {
       tableHeight: '600px',
       vuetableFields: false,
       sortOrder: [{
-        field: 'name',
+        field: 'username',
         direction: 'asc'
       }],
       multiSort: true,
       paginationComponent: 'vuetable-pagination',
       perPage: 10,
+      page: 1,
       paginationInfoTemplate: '',
       // paginationInfoTemplate: 'Showing record: {from} to {to} from {total} item(s)',
       lang: lang
     }
   },
   watch: {
-    'perPage'(val, oldVal) {
-      this.$nextTick(function() {
-        this.$refs.vuetable.refresh()
-      })
-    },
     'paginationComponent'(val, oldVal) {
       this.$nextTick(function() {
         this.$refs.pagination.setPaginationData(this.$refs.vuetable.tablePagination)
       })
     }
   },
+  created() {
+    this.fetchData()
+  },
   methods: {
-    transform(data) {
-      const transformed = {}
-      transformed.pagination = {
-        total: data.total,
-        per_page: data.per_page,
-        current_page: data.current_page,
-        last_page: data.last_page,
-        next_page_url: data.next_page_url,
-        prev_page_url: data.prev_page_url,
-        from: data.from,
-        to: data.to
+    fetchData() {
+      this.loading = 'loading'
+      fetchList(this.moreParams).then(response => {
+        this.transformData(response)
+        this.loading = ''
+      })
+    },
+    transformData(data) {
+      this.transformed = {}
+
+      const last_page = Math.ceil(data.count / this.perPage)
+      const from = (this.page - 1) * this.perPage + 1
+      const to = this.page * this.perPage
+
+      this.transformed.pagination = {
+        total: data.count,
+        per_page: this.perPage,
+        current_page: this.page,
+        last_page: last_page,
+        next_page_url: null,
+        prev_page_url: null,
+        from: from,
+        to: to
       }
 
-      transformed.data = []
-      data = data.data
-      for (let i = 0; i < data.length; i++) {
-        transformed['data'].push({
-          id: data[i].id,
-          name: data[i].name,
-          nickname: data[i].nickname,
-          email: data[i].email,
-          age: data[i].age,
-          birthdate: data[i].birthdate,
-          gender: data[i].gender,
-          address: data[i].address.line1 + ' ' + data[i].address.line2 + ' ' + data[i].address.zipcode
-        })
-      }
-
-      return transformed
+      this.transformed.data = data.data
+      // data = data.data
+      // for (let i = 0; i < data.length; i++) {
+      //   this.transformed['data'].push({
+      //     id: data[i].id,
+      //     name: data[i].name,
+      //     nickname: data[i].nickname,
+      //     email: data[i].email,
+      //     age: data[i].age,
+      //     birthdate: data[i].birthdate,
+      //     gender: data[i].gender,
+      //     address: data[i].address.line1 + ' ' + data[i].address.line2 + ' ' + data[i].address.zipcode
+      //   })
+      // }
     },
     showLoader() {
       this.loading = 'loading'
@@ -230,7 +227,7 @@ export default {
     setFilter() {
       this.moreParams['filter'] = this.searchFor
       this.$nextTick(function() {
-        this.$refs.vuetable.refresh()
+        this.fetchData()
       })
     },
     resetFilter() {
@@ -301,6 +298,7 @@ export default {
       }
     },
     onPaginationData(tablePagination) {
+      // debugger
       this.$refs.paginationInfo.setPaginationData(tablePagination)
       this.$refs.pagination.setPaginationData(tablePagination)
     },
