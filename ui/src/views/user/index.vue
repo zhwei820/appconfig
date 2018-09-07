@@ -1,41 +1,44 @@
 <template>
-  <div class="app-container">
-    <vuetable
-      ref="vuetable"
-      :fields="fields"
-      :table-height="tableHeight"
-      :row-class="rowClassCB"
-      :sort-order="sortOrder"
-      :multi-sort="multiSort"
-      :api-mode="false"
-      :data="transformed"
-      pagination-path="pagination"
-      detail-row-component="my-detail-row"
-      detail-row-transition="expand"
-      @vuetable:pagination-data="onPaginationData"
-      @vuetable:load-success="onLoadSuccess"
-      @vuetable:loading="showLoader"
-      @vuetable:loaded="hideLoader"
-      @vuetable:cell-clicked="onCellClicked"
-      @vuetable:initialized="onInitialized"
-      @vuetable:data-reset="onDataReset">
-      <template slot="actions" slot-scope="props">
-        <div class="custom-actions">
-          <button class="ui basic button" @click="onAction('view-item', props.rowData, props.rowIndex)">
-            <i class="zoom icon"/>
-          </button>
-          <button class="ui basic button" @click="onAction('edit-item', props.rowData, props.rowIndex)">
-            <i class="edit icon"/>
-          </button>
-          <button class="ui basic button" @click="onAction('delete-item', props.rowData, props.rowIndex)">
-            <i class="delete icon"/>
-          </button>
-        </div>
-      </template>
-    </vuetable>
-    <div class="vuetable-pagination ui bottom attached segment grid">
-      <vuetable-pagination-info ref="paginationInfo" :info-template="paginationInfoTemplate"/>
-      <component ref="pagination" :is="paginationComponent" @vuetable-pagination:change-page="onChangePage"/>
+  <div class="app-container" >
+    <div :class="[{'vuetable-wrapper ui basic segment': true}, loading]">
+      <vuetable
+        ref="vuetable"
+        :fields="fields"
+        :table-height="tableHeight"
+        :row-class="rowClassCB"
+        :sort-order="sortOrder"
+        :multi-sort="multiSort"
+        :api-mode="false"
+        :data="transformed"
+        pagination-path="pagination"
+        detail-row-component="my-detail-row"
+        detail-row-transition="expand"
+        @vuetable:pagination-data="onPaginationData"
+        @vuetable:load-success="onLoadSuccess"
+        @vuetable:loading="showLoader"
+        @vuetable:loaded="hideLoader"
+        @vuetable:cell-clicked="onCellClicked"
+        @vuetable:initialized="onInitialized"
+        @vuetable:orderby="orderby"
+        @vuetable:data-reset="onDataReset">
+        <template slot="actions" slot-scope="props">
+          <div class="custom-actions">
+            <button class="ui basic button" @click="onAction('view-item', props.rowData, props.rowIndex)">
+              <i class="zoom icon"/>
+            </button>
+            <button class="ui basic button" @click="onAction('edit-item', props.rowData, props.rowIndex)">
+              <i class="edit icon"/>
+            </button>
+            <button class="ui basic button" @click="onAction('delete-item', props.rowData, props.rowIndex)">
+              <i class="delete icon"/>
+            </button>
+          </div>
+        </template>
+      </vuetable>
+      <div class="vuetable-pagination ui bottom attached segment grid">
+        <vuetable-pagination-info ref="paginationInfo" :info-template="paginationInfoTemplate"/>
+        <component ref="pagination" :is="paginationComponent" @vuetable-pagination:change-page="onChangePage"/>
+      </div>
     </div>
   </div>
 </template>
@@ -97,7 +100,7 @@ const tableColumns = [
         : `<i class="orange birthday icon"></i> ${lang['create_at']}`
     },
     sortField: 'create_at',
-    width: '100px',
+    width: '150px',
     callback: 'formatDate|D/MM/Y'
   },
   {
@@ -158,10 +161,10 @@ export default {
   },
   methods: {
     fetchData() {
-      this.loading = 'loading'
+      this.showLoader()
       fetchList(this.moreParams).then(response => {
         this.transformData(response)
-        this.loading = ''
+        // this.loading = ''
       })
     },
     transformData(data) {
@@ -202,9 +205,6 @@ export default {
     },
     hideLoader() {
       this.loading = ''
-    },
-    allCap(value) {
-      return value.toUpperCase()
     },
     formatDate(value, fmt) {
       if (value === null) return ''
@@ -272,6 +272,9 @@ export default {
     //     'per_page': perPage
     //   }
     // },
+    orderby(field, event) {
+      console.log('orderby', this.sortOrder)
+    },
     onCellClicked(data, field, event) {
       console.log('cellClicked', field.name)
     },
