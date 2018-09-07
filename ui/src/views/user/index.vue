@@ -83,10 +83,11 @@ const tableColumns = [
   {
     name: 'group',
     title: '<i class="mail outline icon"></i> group',
-    sortField: 'group',
     width: '200px',
-    dataClass: 'vuetable-clip-text',
-    visible: true
+    visible: true,
+    titleClass: 'center aligned',
+    dataClass: 'center aligned',
+    callback: 'group'
   },
   {
     name: 'create_at',
@@ -102,7 +103,6 @@ const tableColumns = [
   {
     name: 'gender',
     title: 'Gender',
-    sortField: 'gender',
     titleClass: 'center aligned',
     dataClass: 'center aligned',
     callback: 'gender',
@@ -214,7 +214,10 @@ export default {
     gender(value) {
       return value === 'M'
         ? '<span class="ui teal label"><i class="male icon"></i>Male</span>'
-        : '<span class="ui pink label"><i class="female icon"></i>Female</span>'
+        : '<span class="ui pink label"><i class="female icon"></i>Female</span> <span class="el-tag el-tag--primary el-tag--mini">新-新提交</span>'
+    },
+    group(value) {
+      return value + '<span class="el-tag el-tag--danger el-tag--mini">2</span>'
     },
     showDetailRow(value) {
       const icon = this.$refs.vuetable.isVisibleDetailRow(value) ? 'down' : 'right'
@@ -316,6 +319,10 @@ export default {
     },
     onAction(action, data, index) {
       console.log('slot) action: ' + action, data, data.name, index)
+    },
+    orderBy(field, event) {
+      debugger
+      console.log(field)
     }
   }
 }
