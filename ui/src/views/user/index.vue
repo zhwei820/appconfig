@@ -5,6 +5,7 @@
         ref="vuetable"
         :fields="fields"
         :table-height="tableHeight"
+        :max-table-height="maxTableHeight"
         :row-class="rowClassCB"
         :sort-order="sortOrder"
         :multi-sort="multiSort"
@@ -22,13 +23,13 @@
         @vuetable:data-reset="onDataReset">
         <template slot="actions" slot-scope="props">
           <div class="custom-actions">
-            <button class="ui basic button" @click="onAction('view-item', props.rowData, props.rowIndex)">
+            <button class="ui compact teal button" @click="onAction('view-item', props.rowData, props.rowIndex)">
               <i class="zoom icon"/>
             </button>
-            <button class="ui basic button" @click="onAction('edit-item', props.rowData, props.rowIndex)">
+            <button class="ui compact blue button" @click="onAction('edit-item', props.rowData, props.rowIndex)">
               <i class="edit icon"/>
             </button>
-            <button class="ui basic button" @click="onAction('delete-item', props.rowData, props.rowIndex)">
+            <button class="ui compact red button" @click="onAction('delete-item', props.rowData, props.rowIndex)">
               <i class="delete icon"/>
             </button>
           </div>
@@ -127,12 +128,13 @@ export default {
       searchFor: '',
       moreParams: { aa: 1111, bb: 222 },
       fields: tableColumns,
-      tableHeight: '600px',
+      tableHeight: 'auto',
+      maxTableHeight: '700px',
       vuetableFields: false,
       sortOrder: [],
       multiSort: true,
       paginationComponent: 'vuetable-pagination',
-      perPage: 10,
+      perPage: 5,
       page: 1,
       totalPage: 1,
       paginationInfoTemplate: '',
@@ -207,8 +209,8 @@ export default {
     },
     gender(value) {
       return value === 'M'
-        ? '<span class="ui teal label"><i class="male icon"></i>Male</span>'
-        : '<span class="ui pink label"><i class="female icon"></i>Female</span> <span class="el-tag el-tag--primary el-tag--mini">新-新提交</span>'
+        ? '<span class="ui teal label"><i class="male icon"></i></span>'
+        : '<span class="ui pink label"><i class="female icon"></i></span> <span class="el-tag el-tag--primary el-tag--mini">新-新提交</span>'
     },
     group(value) {
       return value + '<span class="el-tag el-tag--danger el-tag--mini">2</span>'
@@ -303,3 +305,7 @@ export default {
   }
 }
 </script>
+
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import "src/styles/extra.scss";
+</style>
