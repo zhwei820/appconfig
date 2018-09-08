@@ -10,9 +10,8 @@
         :multi-sort="multiSort"
         :api-mode="false"
         :data="transformed"
+        track-by="id"
         pagination-path="pagination"
-        detail-row-component="my-detail-row"
-        detail-row-transition="expand"
         @vuetable:pagination-data="onPaginationData"
         @vuetable:load-success="onLoadSuccess"
         @vuetable:loading="showLoader"
@@ -58,13 +57,6 @@ const lang = {
 
 const tableColumns = [
   {
-    name: '__sequence',
-    title: 'No.',
-    titleClass: 'right aligned',
-    dataClass: 'right aligned',
-    width: '50px'
-  },
-  {
     name: '__checkbox',
     width: '30px',
     title: 'checkbox',
@@ -73,10 +65,9 @@ const tableColumns = [
   },
   {
     name: 'id',
-    title: '<i class="unordered list icon"></i> Detail',
+    title: '<i class="unordered list icon"></i> Id',
     dataClass: 'center aligned',
-    width: '100px',
-    callback: 'showDetailRow'
+    width: '100px'
   },
   {
     name: 'username',
@@ -131,6 +122,7 @@ export default {
   data: function() {
     return {
       transformed: {},
+      selectedTo: [],
       loading: '',
       searchFor: '',
       moreParams: { aa: 1111, bb: 222 },
@@ -142,6 +134,7 @@ export default {
       paginationComponent: 'vuetable-pagination',
       perPage: 10,
       page: 1,
+      totalPage: 1,
       paginationInfoTemplate: '',
       // paginationInfoTemplate: 'Showing record: {from} to {to} from {total} item(s)',
       lang: lang
@@ -158,9 +151,12 @@ export default {
     this.fetchData()
   },
   methods: {
+    updateParams() {
+      return { ...this.moreParams, page: this.page, per_page: this.perPage }
+    },
     fetchData() {
       this.showLoader()
-      fetchList({ ...this.moreParams, ...getSortObj(this.sortOrder) }).then(response => {
+      fetchList({ ...this.updateParams(), ...getSortObj(this.sortOrder) }).then(response => {
         this.transformData(response)
         // this.loading = ''
       })
@@ -168,7 +164,7 @@ export default {
     transformData(data) {
       this.transformed = {}
 
-      const last_page = Math.ceil(data.count / this.perPage)
+      this.totalPage = Math.ceil(data.count / this.perPage)
       const from = (this.page - 1) * this.perPage + 1
       const to = this.page * this.perPage
 
@@ -176,7 +172,7 @@ export default {
         total: data.count,
         per_page: this.perPage,
         current_page: this.page,
-        last_page: last_page,
+        last_page: this.totalPage,
         next_page_url: null,
         prev_page_url: null,
         from: from,
@@ -217,14 +213,6 @@ export default {
     group(value) {
       return value + '<span class="el-tag el-tag--danger el-tag--mini">2</span>'
     },
-    showDetailRow(value) {
-      const icon = this.$refs.vuetable.isVisibleDetailRow(value) ? 'down' : 'right'
-      return [
-        '<a class="show-detail-row">',
-        '<i class="chevron circle ' + icon + ' icon"></i>',
-        '</a>'
-      ].join('')
-    },
     setFilter() {
       this.moreParams['filter'] = this.searchFor
       this.$nextTick(function() {
@@ -249,7 +237,7 @@ export default {
       console.log('orderby', this.sortOrder)
     },
     onCellClicked(data, field, event) {
-      console.log('cellClicked', field.name)
+      console.log('cellClicked', field.name, this.$refs.vuetable.selectedTo)
     },
     onCellDoubleClicked(data, field, event) {
       console.log('cellDoubleClicked:', field.name)
@@ -278,11 +266,23 @@ export default {
     },
     onPaginationData(tablePagination) {
       // debugger
+      console.log(tablePagination)
       this.$refs.paginationInfo.setPaginationData(tablePagination)
       this.$refs.pagination.setPaginationData(tablePagination)
     },
     onChangePage(page) {
-      this.$refs.vuetable.changePage(page)
+      if (page === 'next') {
+        page = this.page + 1
+      }
+      if (page === 'prev') {
+        page = this.page - 1
+      }
+      if (this.page === page || page <= 0 || page > this.totalPage) {
+        return
+      }
+      this.page = page
+      console.log('changePage', this.page)
+      this.fetchData()
     },
     onInitialized(fields) {
       console.log('onInitialized', fields)

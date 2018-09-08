@@ -15,16 +15,16 @@ type GroupController struct {
 // @Summary 用户组列表
 // @Description 用户组列
 // @Param	page	query 	string	true		"page"
-// @Param	page_size	query 	string	true		"page_size"
+// @Param	per_page	query 	string	true		"per_page"
 // @Success 200 {string}
 // @router /group [get]
 func (this *GroupController) ApiGroupList() {
 
 	page, _ := this.GetInt("page")
-	page_size, _ := this.GetInt("page_size")
+	per_page, _ := this.GetInt("per_page")
 	this.GetLogger().Msg("this is a message with trace id")
 	var groups [] models.Group
-	models.Groups().Limit(page_size, (page-1)*page_size).All(&groups)
+	models.Groups().Limit(per_page, (page-1)*per_page).All(&groups)
 	count, _ := models.Groups().Count()
 	beego.Trace(count)
 

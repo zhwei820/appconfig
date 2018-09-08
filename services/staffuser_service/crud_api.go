@@ -22,20 +22,20 @@ type StaffUserController struct {
 // @Summary StaffUser列表
 // @Description StaffUser列表
 // @Param	page	query 	string	true		"page"
-// @Param	page_size	query 	string	true		"page_size"
+// @Param	per_page	query 	string	true		"per_page"
 // @Success 200 {string}
 // @router /staffuser [get]
 func (this *StaffUserController) ApiStaffUserList() {
 
 	page, _ := this.GetInt("page")
-	page_size, _ := this.GetInt("page_size")
-	if page_size == 0 {
-		page_size, _ = this.GetInt("limit")
+	per_page, _ := this.GetInt("per_page")
+	if per_page == 0 {
+		per_page, _ = this.GetInt("limit")
 	}
 
 	this.GetLogger().Msg("this is a message with trace id")
 	var staffusers [] models.StaffUser
-	models.StaffUsers().Limit(page_size, (page-1)*page_size).All(&staffusers)
+	models.StaffUsers().Limit(per_page, (page-1)*per_page).All(&staffusers)
 	count, _ := models.StaffUsers().Count()
 	beego.Trace(count)
 

@@ -37,8 +37,8 @@
                     },
                     {
                         "in": "query",
-                        "name": "page_size",
-                        "description": "page_size",
+                        "name": "per_page",
+                        "description": "per_page",
                         "required": true,
                         "type": "string"
                     }
@@ -181,8 +181,8 @@
                     },
                     {
                         "in": "query",
-                        "name": "page_size",
-                        "description": "page_size",
+                        "name": "per_page",
+                        "description": "per_page",
                         "required": true,
                         "type": "string"
                     }

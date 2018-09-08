@@ -57,7 +57,7 @@ func TestCreate(t *testing.T) {
 
 }
 func testList(t *testing.T) {
-	r, _ := http.NewRequest("GET", "/api/group/group?page=1&page_size=10", nil)
+	r, _ := http.NewRequest("GET", "/api/group/group?page=1&per_page=10", nil)
 	w := httptest.NewRecorder()
 	beego.BeeApp.Handlers.ServeHTTP(w, r)
 
