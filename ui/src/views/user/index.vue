@@ -49,6 +49,7 @@ import VuetablePagination from 'vuetable-2/src/components/VuetablePagination'
 import VuetablePaginationInfo from 'vuetable-2/src/components/VuetablePaginationInfo'
 // import { fetchList, createUser, updateUser } from '@/api/user'
 import { fetchList } from '@/api/user'
+import { preg_quote, getSortObj } from '@/utils/index'
 import { Message } from 'element-ui'
 
 const lang = {
@@ -136,10 +137,7 @@ export default {
       fields: tableColumns,
       tableHeight: '600px',
       vuetableFields: false,
-      sortOrder: [{
-        field: 'username',
-        direction: 'asc'
-      }],
+      sortOrder: [],
       multiSort: true,
       paginationComponent: 'vuetable-pagination',
       perPage: 10,
@@ -162,7 +160,7 @@ export default {
   methods: {
     fetchData() {
       this.showLoader()
-      fetchList(this.moreParams).then(response => {
+      fetchList({ ...this.moreParams, ...getSortObj(this.sortOrder) }).then(response => {
         this.transformData(response)
         // this.loading = ''
       })
@@ -237,42 +235,17 @@ export default {
       this.searchFor = ''
       this.setFilter()
     },
-    preg_quote(str) {
-      // http://kevin.vanzonneveld.net
-      // +   original by: booeyOH
-      // +   improved by: Ates Goral (http://magnetiq.com)
-      // +   improved by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
-      // +   bugfixed by: Onno Marsman
-      // *     example 1: preg_quote("$40");
-      // *     returns 1: '\$40'
-      // *     example 2: preg_quote("*RRRING* Hello?");
-      // *     returns 2: '\*RRRING\* Hello\?'
-      // *     example 3: preg_quote("\\.+*?[^]$(){}=!<>|:");
-      // *     returns 3: '\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:'
-
-      return (str + '').replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, '\\$1')
-    },
     highlight(needle, haystack) {
       return haystack.replace(
-        new RegExp('(' + this.preg_quote(needle) + ')', 'ig'),
+        new RegExp('(' + preg_quote(needle) + ')', 'ig'),
         '<span class="highlight">$1</span>'
       )
     },
     rowClassCB(data, index) {
       return (index % 2) === 0 ? 'odd' : 'even'
     },
-    /*
-     * Example of defining queryParams as a function
-     */
-    // queryParams (sortOrder, currentPage, perPage) {
-    //   return {
-    //     'sort': sortOrder[0].field + '|' + sortOrder[0].direction,
-    //     'order': sortOrder[0].direction,
-    //     'page': currentPage,
-    //     'per_page': perPage
-    //   }
-    // },
     orderby(field, event) {
+      this.fetchData()
       console.log('orderby', this.sortOrder)
     },
     onCellClicked(data, field, event) {
