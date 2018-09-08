@@ -35,7 +35,7 @@ func (this *StaffUserController) ApiStaffUserList() {
 
 	this.GetLogger().Msg("this is a message with trace id")
 	var staffusers [] models.StaffUser
-	models.StaffUsers().Limit(per_page, (page-1)*per_page).All(&staffusers)
+	this.ListFilterQs().Limit(per_page, (page-1)*per_page).All(&staffusers)
 	count, _ := models.StaffUsers().Count()
 	beego.Trace(count)
 

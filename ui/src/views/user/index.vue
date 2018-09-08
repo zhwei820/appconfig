@@ -1,5 +1,18 @@
 <template>
   <div class="app-container" >
+
+    <div class="ui grid">
+      <div class="ui left aligned nine wide column">
+        <div class="ui labeled icon input">
+          <div class="ui label">Search:</div>
+          <input v-model="searchFor" class="ui input" @keyup.enter="setFilter">
+          <i class="search icon"/>
+        </div>
+        <button class="ui button primary" @click="setFilter">Go</button>
+        <button class="ui button" @click="resetFilter">Reset</button>
+      </div>
+    </div>
+
     <div :class="[{'vuetable-wrapper ui basic segment': true}, loading]">
       <vuetable
         ref="vuetable"
@@ -160,41 +173,22 @@ export default {
       this.showLoader()
       fetchList({ ...this.updateParams(), ...getSortObj(this.sortOrder) }).then(response => {
         this.transformData(response)
-        // this.loading = ''
+        this.hideLoader()
       })
     },
     transformData(data) {
       this.transformed = {}
 
       this.totalPage = Math.ceil(data.count / this.perPage)
-      const from = (this.page - 1) * this.perPage + 1
-      const to = this.page * this.perPage
 
       this.transformed.pagination = {
         total: data.count,
         per_page: this.perPage,
         current_page: this.page,
-        last_page: this.totalPage,
-        next_page_url: null,
-        prev_page_url: null,
-        from: from,
-        to: to
+        last_page: this.totalPage
       }
 
       this.transformed.data = data.data
-      // data = data.data
-      // for (let i = 0; i < data.length; i++) {
-      //   this.transformed['data'].push({
-      //     id: data[i].id,
-      //     name: data[i].name,
-      //     nickname: data[i].nickname,
-      //     email: data[i].email,
-      //     age: data[i].age,
-      //     birthdate: data[i].birthdate,
-      //     gender: data[i].gender,
-      //     address: data[i].address.line1 + ' ' + data[i].address.line2 + ' ' + data[i].address.zipcode
-      //   })
-      // }
     },
     showLoader() {
       this.loading = 'loading'
@@ -208,15 +202,13 @@ export default {
       return value
     },
     gender(value) {
-      return value === 'M'
-        ? '<span class="ui teal label"><i class="male icon"></i></span>'
-        : '<span class="ui pink label"><i class="female icon"></i></span> <span class="el-tag el-tag--primary el-tag--mini">新-新提交</span>'
+      return '<span class="ui pink label"><i class="female icon"></i></span> <span class="el-tag el-tag--primary el-tag--mini">新-新提交</span>'
     },
     group(value) {
       return value + '<span class="el-tag el-tag--danger el-tag--mini">2</span>'
     },
     setFilter() {
-      this.moreParams['filter'] = this.searchFor
+      this.moreParams['username__icontains'] = this.searchFor
       this.$nextTick(function() {
         this.fetchData()
       })
