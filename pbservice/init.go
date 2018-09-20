@@ -6,7 +6,6 @@ import (
 )
 
 func init() {
-	println("init1")
 
 	service := rpc.NewHTTPService()
 	service.AddFunction("hello", Say)
