@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package hprose;
+
+option optimize_for = SPEED;
+
+// ** server **
+// func Say(in []byte) ([]byte, error) {
+// }
+
+// ** client **
+// Say func(in []byte) (reply []byte, err error) `simple:"true"`
+//
+
+message SayInput {
+    string query = 1; // query
+    sint64 page_number = 2; // 页数
+    sint64 result_per_page = 3; // 每页数量
+
+}
+
+message SayOutput {
+    string url = 1;
+    string title = 2;
+    repeated string snippets = 3;
+    repeated SayResult results = 4;
+}
+
+message SayResult {
+    string url = 1;
+    string title = 2;
+    repeated string snippets = 3;
+}

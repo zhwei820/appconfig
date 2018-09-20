@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package hprose;
+
+option optimize_for = SPEED;
+
+// ** server **
+// func Sing(in []byte) ([]byte, error) {
+// }
+
+// ** client **
+// Sing func(in []byte) (reply []byte, err error) `simple:"true"`
+//
+
+message SingInput {
+    string query = 1; // query
+    sint64 page_number = 2; // 页数
+    sint64 result_per_page = 3; // 每页数量
+
+}
+
+message SingOutput {
+    string url = 1;
+    string title = 2;
+    repeated string snippets = 3;
+    repeated SingResult results = 4;
+}
+
+message SingResult {
+    string url = 1;
+    string title = 2;
+    repeated string snippets = 3;
+}
+
+
+

@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "github.com/zhwei820/appconfig/routers"
+	_ "github.com/zhwei820/appconfig/pbservice"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 
@@ -31,6 +32,5 @@ func main() {
 
 func destroy() {
 	util.Destroy()
-
 
 }
