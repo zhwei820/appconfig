@@ -9,18 +9,23 @@ import (
 	"github.com/zhwei820/appconfig/utils/rpc_register"
 	"github.com/zhwei820/appconfig/utils/util"
 	"github.com/rs/zerolog/log"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
+	// https://stackoverflow.com/questions/41432193/how-to-delete-a-file-using-golang-on-program-exit/41455960#41455960
+	go func() {
+		sigs := make(chan os.Signal, 1)
+		signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM) // 程序退出清理资源
+		<-sigs
+		destroy()
+		os.Exit(0)
+	}()
 
-	//defer func() {
-	//	destroy() // 退出后清理资源
-	//}()
-	defer destroy()
 	debug, _ := beego.AppConfig.Bool("debug")
-
 	beego.BConfig.WebConfig.StaticDir["/asset"] = "./views/templates"
-
 	if debug {
 		beego.BConfig.WebConfig.DirectoryIndex = true
 		beego.BConfig.WebConfig.StaticDir["/swagger"] = "./swagger"
@@ -34,7 +39,6 @@ func main() {
 }
 
 func destroy() {
-	println("清除资源")
 	log.Info().Msg("清除资源")
 	util.Destroy()
 	rpc_register.Cancel() // 取消注册 DiscoveryRegister

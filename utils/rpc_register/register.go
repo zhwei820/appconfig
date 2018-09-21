@@ -3,11 +3,11 @@ package rpc_register
 import (
 	"github.com/Bilibili/discovery/naming"
 	"time"
-	"fmt"
 	"github.com/astaxie/beego"
 	"strings"
 	"context"
 	"github.com/zhwei820/appconfig/utils/util"
+	"github.com/rs/zerolog/log"
 )
 
 var Cancel context.CancelFunc
@@ -36,7 +36,7 @@ func DiscoveryRegister() {
 		Metadata: map[string]string{"weight": "10"},
 	}
 	Cancel, _ = dis.Register(ins)
-	//defer cancel() // NOTE: 注意一般在进程退出的时候执行，会调用discovery的cancel接口，使实例从discovery移除
-	fmt.Println("register")
-	// Unordered output4
+	// NOTE: 注意一般在进程退出的时候执行，会调用discovery的cancel接口，使实例从discovery移除
+	log.Info().Msg("register")
+
 }
