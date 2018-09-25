@@ -8,6 +8,7 @@ import (
 	"context"
 	"github.com/zhwei820/appconfig/utils/util"
 	"github.com/rs/zerolog/log"
+	"github.com/zhwei820/appconfig/utils/define"
 )
 
 var Cancel context.CancelFunc
@@ -17,18 +18,17 @@ func DiscoveryRegister() {
 	discoveryUrls := strings.Split(beego.AppConfig.String("discovery_url"), ",")
 
 	conf := &naming.Config{
-
 		Nodes: discoveryUrls, // NOTE: 配置种子节点(1个或多个)，client内部可根据/discovery/nodes节点获取全部node(方便后面增减节点)
-		Zone:  "sh1",
-		Env:   "test",
+		Zone:  define.DiscoveryZone,
+		Env:   define.DiscoveryEnv,
 	}
 	dis := naming.New(conf)
 	svcAddr := "http://" + util.GetOutboundIP() + ":" + beego.AppConfig.String("httpport")
 
 	ins := &naming.Instance{
-		Zone:  "sh1",
-		Env:   "test",
-		AppID: "provider",
+		Zone:  define.DiscoveryZone,
+		Env:   define.DiscoveryEnv,
+		AppID: define.DiscoveryAppID,
 		// Hostname:"", // NOTE: hostname 不需要，会优先使用discovery new时Config配置的值，如没有则从os.Hostname方法获取！！！
 		Addrs:    []string{svcAddr},
 		Color:    "red",
