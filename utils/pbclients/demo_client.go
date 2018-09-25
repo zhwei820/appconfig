@@ -13,7 +13,7 @@ type consumer struct {
 	appID string
 	dis   naming.Resolver
 	ins   []*naming.Instance
-	Clients []*rpc.Clients
+	clients []*rpc.Clients
 }
 
 var DemoComsumer *consumer
@@ -36,8 +36,8 @@ func init() {
 	rsl := dis.Build(DemoComsumer.appID)
 	ch := rsl.Watch()
 	go DemoComsumer.getInstances(ch)
-	//in := DemoComsumer.getInstance()
-	//_ = in
+	in := DemoComsumer.GetClient()
+	_ = in
 }
 
 func (c *consumer) getInstances(ch <-chan struct{}) {
@@ -50,13 +50,9 @@ func (c *consumer) getInstances(ch <-chan struct{}) {
 		if !ok {
 			continue
 		}
-		// get local zone instances, otherwise get all zone instances.
+		// get local zone instances
 		if in, ok := ins[c.conf.Zone]; ok {
 			c.ins = in
-		} else {
-			for _, in := range ins {
-				c.ins = append(c.ins, in...)
-			}
 		}
 	}
 }

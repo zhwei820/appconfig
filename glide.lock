@@ -1,5 +1,5 @@
-hash: 72b46683f16c30ceb150156d80831bde4a3eef25bac2262b1b0b998e2aa326af
-updated: 2018-09-01T11:34:47.045258842+08:00
+hash: ef68bc2ccb7f93861bd6b9c078e6580ba35a31839debb48255bc28146ab629fa
+updated: 2018-09-25T22:02:50.059699586+08:00
 imports:
 - name: github.com/astaxie/beego
   version: 053a075344c118a5cc41981b29ef612bb53d20ca
@@ -10,11 +10,19 @@ imports:
   - grace
   - logs
   - orm
+  - plugins/cors
   - session
   - session/redis
   - toolbox
   - utils
   - validation
+- name: github.com/Bilibili/discovery
+  version: a31fc879e8c5f21b710b84ff86bdf3a4fe84075e
+  subpackages:
+  - errors
+  - lib/http
+  - lib/time
+  - naming
 - name: github.com/bitly/go-simplejson
   version: aabad6e819789e569bd6aabf444c935aa9ba1e44
 - name: github.com/certifi/gocertifi
@@ -27,17 +35,29 @@ imports:
   version: 7535a8fa2ace0ffb684b19f28d00655459ea2dae
 - name: github.com/go-sql-driver/mysql
   version: d523deb1b23d913de5bdada721a6071e71283618
+- name: github.com/gogo/protobuf
+  version: 61dbc136cf5d2f08d68a011382652244990a53a9
+  subpackages:
+  - proto
+- name: github.com/golang/glog
+  version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/gomodule/redigo
   version: 9c11da706d9b7902c6da69c592f75637793fe121
   subpackages:
   - internal
   - redis
+- name: github.com/hprose/hprose-golang
+  version: 6c2a3b7138ea2c7dc4a8907d644f9f134e0fae74
+  subpackages:
+  - io
+  - rpc
+  - util
 - name: github.com/immortal/logrotate
   version: 6f52ae74e103a0691e70ae31d82c0d99ab9ba973
 - name: github.com/pkg/errors
   version: 816c9085562cd7ee03e7f8188a1cfd942858cded
 - name: github.com/rs/zerolog
-  version: 77db4b4f350e31be66a57c332acb7721cf9ff9bb
+  version: 338f9bc14084d22cb8eeacd6492861f8449d715c
   subpackages:
   - internal/cbor
   - internal/json
