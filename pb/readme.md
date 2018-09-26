@@ -7,4 +7,8 @@ cd subdir; sh ./gen.sh
 
 [https://github.com/gogo/protobuf](https://github.com/gogo/protobuf)
 
+[https://github.com/zhwei820/protoc-gen-hprose](https://github.com/zhwei820/protoc-gen-hprose)
+
+
+
 ## 此文件夹在各个服务中共享代码

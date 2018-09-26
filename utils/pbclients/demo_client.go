@@ -9,11 +9,11 @@ import (
 )
 
 type consumer struct {
-	conf  *naming.Config
-	appID string
-	dis   naming.Resolver
-	ins   []*naming.Instance
-	clients []*rpc.Clients
+	conf      *naming.Config
+	appID     string
+	dis       naming.Resolver
+	ins       []*naming.Instance
+	rpclients []*rpc.HTTPClient
 }
 
 var DemoComsumer *consumer
@@ -41,6 +41,7 @@ func init() {
 }
 
 func (c *consumer) getInstances(ch <-chan struct{}) {
+
 	for { // NOTE: 通过watch返回的event chan =>
 		if _, ok := <-ch; !ok {
 			return
@@ -53,6 +54,12 @@ func (c *consumer) getInstances(ch <-chan struct{}) {
 		// get local zone instances
 		if in, ok := ins[c.conf.Zone]; ok {
 			c.ins = in
+			c.rpclients = make([]*rpc.HTTPClient, 0)
+
+			for _, item := range c.ins {
+				rpclient := rpc.NewHTTPClient(item.Addrs[0])
+				c.rpclients = append(c.rpclients, rpclient)
+			}
 		}
 	}
 }
@@ -61,5 +68,5 @@ func (c *consumer) GetClient() (ins *naming.Instance) {
 	// get instance by loadbalance
 	// you can use any loadbalance algorithm what you want.
 
-	return
+	return c.ins[0]
 }

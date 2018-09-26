@@ -4,13 +4,10 @@ package hprose;
 
 option optimize_for = SPEED;
 
-// ** server **
-// func Sing(in []byte) ([]byte, error) {
-// }
-
-// ** client **
-// Sing func(in []byte) (reply []byte, err error) `simple:"true"`
-//
+service SingService {
+    rpc Hello (SingInput) returns (SingOutput) {
+    }
+}
 
 message SingInput {
     string query = 1; // query
