@@ -9,7 +9,7 @@ import (
 	"sync"
 )
 
-type consumer struct {
+type Consumer struct {
 	Idx   uint64
 	mutex sync.RWMutex
 
@@ -22,7 +22,7 @@ type consumer struct {
 }
 
 // This Example show how get watch a server provier and get provider instances.
-func NewComsumer(appID string) *consumer {
+func NewComsumer(appID string) *Consumer {
 	discoveryUrls := strings.Split(beego.AppConfig.String("discovery_url"), ",")
 
 	conf := &naming.Config{
@@ -31,7 +31,7 @@ func NewComsumer(appID string) *consumer {
 		Env:   define.DiscoveryEnv,
 	}
 	dis := naming.New(conf)
-	demoComsumer := &consumer{
+	demoComsumer := &Consumer{
 		conf:  conf,
 		appID: appID,
 		Dis:   dis.Build(appID),

@@ -9,13 +9,13 @@ import (
 	"sync/atomic"
 )
 
-var DemoComsumer *consumer
+var DemoComsumer *Consumer
 
 func init() {
 	DemoComsumer = NewComsumer(define.SingServiceAppId)
 }
 
-func (c *consumer) getInstances(ch <-chan struct{}) {
+func (c *Consumer) getInstances(ch <-chan struct{}) {
 
 	for { // NOTE: 通过watch返回的event chan =>
 		if _, ok := <-ch; !ok {
@@ -47,7 +47,7 @@ func (c *consumer) getInstances(ch <-chan struct{}) {
 	}
 }
 
-func (c *consumer) GetInstance() (in *naming.Instance, err error) {
+func (c *Consumer) GetInstance() (in *naming.Instance, err error) {
 	// get instance by load balance
 	// you can use any load balance algorithm what you want.
 
@@ -57,7 +57,7 @@ func (c *consumer) GetInstance() (in *naming.Instance, err error) {
 	return nil, errors.New("empty client")
 }
 
-func (c *consumer) GetService() (svc interface{}, err error) {
+func (c *Consumer) GetService() (svc interface{}, err error) {
 	// get svc instance by load balance
 	// you can use any load balance algorithm what you want.
 
@@ -67,11 +67,11 @@ func (c *consumer) GetService() (svc interface{}, err error) {
 	}
 	return nil, errors.New("empty svc")
 }
-func (c *consumer) switchService() {
+func (c *Consumer) switchService() {
 	atomic.AddUint64(&c.Idx, 1)
 }
 
-func (c *consumer) RemoveService(idx uint64) {
+func (c *Consumer) RemoveService(idx uint64) {
 	c.mutex.Lock()
 	c.rpcservices = append(c.rpcservices[:idx%uint64(len(c.rpcservices))], c.rpcservices[idx%uint64(len(c.rpcservices))+1:]...)
 	c.mutex.Unlock()
