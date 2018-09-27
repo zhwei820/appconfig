@@ -32,7 +32,6 @@ func main() {
 	orm.DefaultTimeLoc = time.UTC
 	beego.BConfig.ServerName = "snail server 1.0"
 
-	rpc_register.DiscoveryRegister() // DiscoveryRegister
 	beego.Run()
 
 }

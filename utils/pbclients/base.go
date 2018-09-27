@@ -6,11 +6,13 @@ import (
 	"strings"
 	"github.com/astaxie/beego"
 	"github.com/zhwei820/appconfig/utils/define"
-	"time"
+	"sync"
 )
 
 type consumer struct {
-	idx         int
+	Idx   uint64
+	mutex sync.RWMutex
+
 	conf        *naming.Config
 	appID       string
 	Dis         naming.Resolver
@@ -34,24 +36,7 @@ func NewComsumer(appID string) *consumer {
 		appID: appID,
 		Dis:   dis.Build(appID),
 	}
-	go renewInstances(demoComsumer)
+	ch := demoComsumer.Dis.Watch()
+	go demoComsumer.getInstances(ch)
 	return demoComsumer
-}
-
-// 定时更新服务列表
-func renewInstances(demoComsumer *consumer) {
-	renewfunc := func() {
-		ch := demoComsumer.Dis.Watch()
-		demoComsumer.getInstances(ch)
-	}
-
-	go renewfunc()
-	timer2 := time.NewTicker(30 * time.Second)
-	for {
-		select {
-		case <-timer2.C:
-			renewfunc()
-		}
-	}
-
 }

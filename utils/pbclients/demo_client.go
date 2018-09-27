@@ -6,6 +6,7 @@ import (
 	. "github.com/zhwei820/appconfig/pb/appconfig"
 	"github.com/hprose/hprose-golang/rpc"
 	"errors"
+	"sync/atomic"
 )
 
 var DemoComsumer *consumer
@@ -29,7 +30,9 @@ func (c *consumer) getInstances(ch <-chan struct{}) {
 		if in, ok := ins[c.conf.Zone]; ok {
 			c.ins = in
 			c.rpclients = make([]*rpc.HTTPClient, 0)
+			c.rpcservices = make([] interface{}, 0)
 
+			c.mutex.Lock()
 			for _, item := range c.ins {
 				rpclient := rpc.NewHTTPClient(item.Addrs[0] + define.DiscoveryUrlPrefix)
 				c.rpclients = append(c.rpclients, rpclient)
@@ -37,8 +40,9 @@ func (c *consumer) getInstances(ch <-chan struct{}) {
 				var singService *SingService
 				rpclient.UseService(&singService)
 				c.rpcservices = append(c.rpcservices, singService)
-
 			}
+			c.mutex.Unlock()
+
 		}
 	}
 }
@@ -58,8 +62,17 @@ func (c *consumer) GetService() (svc interface{}, err error) {
 	// you can use any load balance algorithm what you want.
 
 	if len(c.rpcservices) > 0 {
-		c.idx += 1
-		return c.rpcservices[c.idx%len(c.rpcservices)], nil
+		c.switchService()
+		return c.rpcservices[atomic.LoadUint64(&(c.Idx))%uint64(len(c.rpcservices))], nil
 	}
 	return nil, errors.New("empty svc")
+}
+func (c *consumer) switchService() {
+	atomic.AddUint64(&c.Idx, 1)
+}
+
+func (c *consumer) RemoveService(idx uint64) {
+	c.mutex.Lock()
+	c.rpcservices = append(c.rpcservices[:idx%uint64(len(c.rpcservices))], c.rpcservices[idx%uint64(len(c.rpcservices))+1:]...)
+	c.mutex.Unlock()
 }

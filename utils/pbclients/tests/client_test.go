@@ -12,6 +12,7 @@ import (
 	. "github.com/zhwei820/appconfig/utils/pbclients"
 	"log"
 	"github.com/astaxie/beego"
+	"strings"
 )
 
 func TestDiscoveryRegister(t *testing.T) {
@@ -30,7 +31,11 @@ func TestDiscoveryRegister(t *testing.T) {
 			input, _ := data.Marshal()
 			res, err := svc.(*SingService).Hello(input)
 			if err != nil {
-				log.Fatalf("%v", err.Error())
+				if strings.Contains(err.Error(), "connect"){
+					DemoComsumer.RemoveService(DemoComsumer.Idx)
+				}
+				log.Printf("%v", err.Error())
+				continue
 			}
 			var out SayOutput
 			out.Unmarshal(res)
