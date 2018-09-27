@@ -2,7 +2,6 @@ package default_service
 
 import (
 	. "github.com/zhwei820/appconfig/services/base_service"
-	"github.com/zhwei820/appconfig/utils/pbclients"
 )
 
 // Operations about object
@@ -15,7 +14,6 @@ type DefaultController struct {
 // @Success 200 {string}
 // @router / [get]
 func (this *DefaultController) ApiGetAll() {
-	pbclients.DemoComsumer.GetClient()
 	this.WriteJson(Response{0, "success.", "API 1.0"})
 }
 

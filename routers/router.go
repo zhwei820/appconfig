@@ -2,6 +2,7 @@ package routers
 
 import (
 	_ "github.com/zhwei820/appconfig/utils/util"
+	_ "github.com/zhwei820/appconfig/pbservice"
 
 	"github.com/astaxie/beego"
 	"github.com/zhwei820/appconfig/services/default_service"

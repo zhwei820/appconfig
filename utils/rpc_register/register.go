@@ -14,7 +14,7 @@ import (
 var Cancel context.CancelFunc
 
 // This Example register a server provider into discovery.
-func DiscoveryRegister() {
+func DiscoveryRegister(appId string) {
 	discoveryUrls := strings.Split(beego.AppConfig.String("discovery_url"), ",")
 
 	conf := &naming.Config{
@@ -28,7 +28,7 @@ func DiscoveryRegister() {
 	ins := &naming.Instance{
 		Zone:  define.DiscoveryZone,
 		Env:   define.DiscoveryEnv,
-		AppID: define.DiscoveryAppID,
+		AppID: appId,
 		// Hostname:"", // NOTE: hostname 不需要，会优先使用discovery new时Config配置的值，如没有则从os.Hostname方法获取！！！
 		Addrs:    []string{svcAddr},
 		Color:    "red",
@@ -39,4 +39,8 @@ func DiscoveryRegister() {
 	// NOTE: 注意一般在进程退出的时候执行，会调用discovery的cancel接口，使实例从discovery移除
 	log.Info().Msg("register")
 
+}
+
+func init() {
+	DiscoveryRegister(define.SingServiceAppId)
 }

@@ -2,42 +2,16 @@ package pbclients
 
 import (
 	"github.com/Bilibili/discovery/naming"
-	"strings"
-	"github.com/astaxie/beego"
 	"github.com/zhwei820/appconfig/utils/define"
+	. "github.com/zhwei820/appconfig/pb/appconfig"
 	"github.com/hprose/hprose-golang/rpc"
+	"errors"
 )
-
-type consumer struct {
-	conf      *naming.Config
-	appID     string
-	dis       naming.Resolver
-	ins       []*naming.Instance
-	rpclients []*rpc.HTTPClient
-}
 
 var DemoComsumer *consumer
 
-// This Example show how get watch a server provier and get provider instances.
 func init() {
-	discoveryUrls := strings.Split(beego.AppConfig.String("discovery_url"), ",")
-
-	conf := &naming.Config{
-		Nodes: discoveryUrls,
-		Zone:  define.DiscoveryZone,
-		Env:   define.DiscoveryEnv,
-	}
-	dis := naming.New(conf)
-	DemoComsumer = &consumer{
-		conf:  conf,
-		appID: define.DiscoveryAppID,
-		dis:   dis.Build(define.DiscoveryAppID),
-	}
-	rsl := dis.Build(DemoComsumer.appID)
-	ch := rsl.Watch()
-	go DemoComsumer.getInstances(ch)
-	in := DemoComsumer.GetClient()
-	_ = in
+	DemoComsumer = NewComsumer(define.SingServiceAppId)
 }
 
 func (c *consumer) getInstances(ch <-chan struct{}) {
@@ -47,7 +21,7 @@ func (c *consumer) getInstances(ch <-chan struct{}) {
 			return
 		}
 		// NOTE: <= 实时fetch最新的instance实例
-		ins, ok := c.dis.Fetch()
+		ins, ok := c.Dis.Fetch()
 		if !ok {
 			continue
 		}
@@ -57,16 +31,35 @@ func (c *consumer) getInstances(ch <-chan struct{}) {
 			c.rpclients = make([]*rpc.HTTPClient, 0)
 
 			for _, item := range c.ins {
-				rpclient := rpc.NewHTTPClient(item.Addrs[0])
+				rpclient := rpc.NewHTTPClient(item.Addrs[0] + define.DiscoveryUrlPrefix)
 				c.rpclients = append(c.rpclients, rpclient)
+
+				var singService *SingService
+				rpclient.UseService(&singService)
+				c.rpcservices = append(c.rpcservices, singService)
+
 			}
 		}
 	}
 }
 
-func (c *consumer) GetClient() (ins *naming.Instance) {
-	// get instance by loadbalance
-	// you can use any loadbalance algorithm what you want.
+func (c *consumer) GetInstance() (in *naming.Instance, err error) {
+	// get instance by load balance
+	// you can use any load balance algorithm what you want.
 
-	return c.ins[0]
+	if len(c.ins) > 0 {
+		return c.ins[0], nil
+	}
+	return nil, errors.New("empty client")
+}
+
+func (c *consumer) GetService() (svc interface{}, err error) {
+	// get svc instance by load balance
+	// you can use any load balance algorithm what you want.
+
+	if len(c.rpcservices) > 0 {
+		c.idx += 1
+		return c.rpcservices[c.idx%len(c.rpcservices)], nil
+	}
+	return nil, errors.New("empty svc")
 }
