@@ -39,8 +39,9 @@ func authFilter() {
 
 			valid, _ := et.ValidateToken(authtoken, 0)
 			if !valid {
-				ctx.Redirect(302, "/view/auth/login.html")
+				ctx.WriteString("未授权")
 			}
+			et.GetUserId(authtoken)
 
 			// // session base validation
 			//uid := ctx.Input.CruSession.Get("uid")

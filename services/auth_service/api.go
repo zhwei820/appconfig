@@ -23,7 +23,6 @@ type LoginToken struct {
 	Token string           `json:"token"`
 }
 
-
 // @Summary 登录
 // @Description 账号登录接口
 // @Param	username	formData 	string	true		"用户昵称"
@@ -58,7 +57,6 @@ func (this *AuthController) SessionLogout() {
 
 	this.DelSession("uid")
 	this.Redirect("/view/auth/login.html", 302)
-
 }
 
 // @Summary 登录
@@ -81,8 +79,8 @@ func (this *AuthController) ApiLogin() {
 		return
 	}
 	et := utils.EasyToken{
-		Uid:      user.Id,
-		Expires:  utils.GetExpireTime(),
+		Uid:     user.Id,
+		Expires: utils.GetExpireTime(),
 	}
 	token, err := et.GetToken()
 	if err != nil {
