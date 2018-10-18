@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package hprose;
+package say;
 
 option optimize_for = SPEED;
 
 service SayService {
-    rpc Hello (SayInput) returns (SayOutput) {
+    rpc SayHello (SayInput) returns (SayOutput) {
     }
 }
 

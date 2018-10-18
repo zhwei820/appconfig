@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package hprose;
+package sing;
 
 option optimize_for = SPEED;
 
 service SingService {
-    rpc Hello (SingInput) returns (SingOutput) {
+    rpc SingHello (SingInput) returns (SingOutput) {
     }
 }
 

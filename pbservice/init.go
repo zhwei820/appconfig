@@ -13,7 +13,7 @@ import (
 func init() {
 
 	service := rpc.NewHTTPService()
-	service.AddInstanceMethods(SayService{Hello: say.SayHello}, rpc.Options{Simple: true})
-	service.AddInstanceMethods(SingService{Hello: sing.SingHello}, rpc.Options{Simple: true})
+	service.AddInstanceMethods(SayService{SayHello: say.SayHello}, rpc.Options{Simple: true})
+	service.AddInstanceMethods(SingService{SingHello: sing.SingHello}, rpc.Options{Simple: true})
 	beego.Handler(define.DiscoveryUrlPrefix, service)
 }

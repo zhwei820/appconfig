@@ -1,5 +1,5 @@
-from jinja2 import Template
 import os
+from jinja2 import Template
 
 
 def read_file(src):
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("src", nargs='?', default="group.go")
+    parser.add_argument("src", nargs='?', default="models/group.go")
 
     args = parser.parse_args()
 
