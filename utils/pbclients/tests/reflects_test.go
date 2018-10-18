@@ -4,7 +4,7 @@ import (
 	_ "github.com/zhwei820/appconfig/utils/gotests"
 	_ "github.com/zhwei820/appconfig/routers"
 
-	. "github.com/zhwei820/appconfig/pb/appconfig"
+	. "github.com/zhwei820/appconfig/pb/appconfig/sing"
 	. "github.com/zhwei820/appconfig/utils/pbclients"
 	"log"
 	"strings"
@@ -12,6 +12,7 @@ import (
 	"reflect"
 )
 
+// deprecate
 func CallRpc1(demoComsumer *Consumer, methodName string, input []byte) ([]byte, error) {
 	out := []byte{}
 	for ii := 0; ii < 2; ii++ {

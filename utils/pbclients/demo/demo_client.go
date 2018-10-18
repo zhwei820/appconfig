@@ -3,7 +3,7 @@ package demo
 import (
 	"github.com/zhwei820/appconfig/utils/define"
 	. "github.com/zhwei820/appconfig/utils/pbclients"
-	. "github.com/zhwei820/appconfig/pb/appconfig"
+	. "github.com/zhwei820/appconfig/pb/appconfig/sing"
 	"github.com/hprose/hprose-golang/rpc"
 	"strings"
 	"github.com/astaxie/beego"
@@ -61,7 +61,7 @@ func (c *DemoComsumerStruct) getInstances(ch <-chan struct{}) {
 				rpclient := rpc.NewHTTPClient(item.Addrs[0] + define.DiscoveryUrlPrefix)
 				c.Rpclients = append(c.Rpclients, rpclient)
 
-				var singService *SingService
+				var singService *SingService // replace this
 				rpclient.UseService(&singService)
 				c.Rpcservices = append(c.Rpcservices, singService)
 			}

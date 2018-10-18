@@ -27,6 +27,7 @@ test:
 
 
 TARGET=$(src)
-# 根据模型定义, 生成接口代码
+# 根据模型(model)定义, 生成接口(services)代码
+# make gen_api group.go
 gen_api:$(TARGET)
 	python3 gen_api.py $(TARGET)

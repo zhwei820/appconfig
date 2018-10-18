@@ -8,7 +8,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/zhwei820/appconfig/utils/rpc_register"
 	"time"
-	. "github.com/zhwei820/appconfig/pb/appconfig"
+	. "github.com/zhwei820/appconfig/pb/appconfig/sing"
 	. "github.com/zhwei820/appconfig/utils/pbclients/demo"
 	"github.com/astaxie/beego"
 )
@@ -21,11 +21,11 @@ func TestDiscoveryRegister(t *testing.T) {
 	for {
 		select {
 		case <-time.After(1 * time.Second):
-			data := SayInput{Query: "sdfdsf"}
+			data := SingInput{Query: "sdfdsf"}
 			input, _ := data.Marshal()
 
 			res, _ := CallRpc(DemoComsumer, "Hello", input)
-			var out SayOutput
+			var out SingOutput
 			out.Unmarshal(res)
 			spew.Dump(out)
 		}
