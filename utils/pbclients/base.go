@@ -3,40 +3,49 @@ package pbclients
 import (
 	"github.com/Bilibili/discovery/naming"
 	"github.com/hprose/hprose-golang/rpc"
-	"strings"
-	"github.com/astaxie/beego"
-	"github.com/zhwei820/appconfig/utils/define"
 	"sync"
+	"sync/atomic"
+	"errors"
 )
 
 type Consumer struct {
 	Idx   uint64
-	mutex sync.RWMutex
+	Mutex sync.RWMutex
 
-	conf        *naming.Config
-	appID       string
+	Conf        *naming.Config
+	AppID       string
 	Dis         naming.Resolver
-	ins         []*naming.Instance
-	rpclients   []*rpc.HTTPClient
-	rpcservices []interface{}
+	Ins         []*naming.Instance
+	Rpclients   []*rpc.HTTPClient
+	Rpcservices []interface{}
 }
 
-// This Example show how get watch a server provier and get provider instances.
-func NewComsumer(appID string) *Consumer {
-	discoveryUrls := strings.Split(beego.AppConfig.String("discovery_url"), ",")
+func (c *Consumer) GetInstance() (in *naming.Instance, err error) {
+	// get instance by load balance
+	// you can use any load balance algorithm what you want.
 
-	conf := &naming.Config{
-		Nodes: discoveryUrls,
-		Zone:  define.DiscoveryZone,
-		Env:   define.DiscoveryEnv,
+	if len(c.Ins) > 0 {
+		return c.Ins[0], nil
 	}
-	dis := naming.New(conf)
-	demoComsumer := &Consumer{
-		conf:  conf,
-		appID: appID,
-		Dis:   dis.Build(appID),
+	return nil, errors.New("empty client")
+}
+
+func (c *Consumer) GetService() (svc interface{}, err error) {
+	// get svc instance by load balance
+	// you can use any load balance algorithm what you want.
+
+	if len(c.Rpcservices) > 0 {
+		c.switchService()
+		return c.Rpcservices[atomic.LoadUint64(&(c.Idx))%uint64(len(c.Rpcservices))], nil
 	}
-	ch := demoComsumer.Dis.Watch()
-	go demoComsumer.getInstances(ch)
-	return demoComsumer
+	return nil, errors.New("empty svc")
+}
+func (c *Consumer) switchService() {
+	atomic.AddUint64(&c.Idx, 1)
+}
+
+func (c *Consumer) RemoveService(idx uint64) {
+	c.Mutex.Lock()
+	c.Rpcservices = append(c.Rpcservices[:idx%uint64(len(c.Rpcservices))], c.Rpcservices[idx%uint64(len(c.Rpcservices))+1:]...)
+	c.Mutex.Unlock()
 }
