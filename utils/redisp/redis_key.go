@@ -1,3 +1,3 @@
-package redis
+package redisp
 
 const ClientInfoKey  = "ClientInfo"

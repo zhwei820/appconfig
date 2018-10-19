@@ -10,6 +10,9 @@ import (
 	"github.com/astaxie/beego/context"
 	"github.com/zhwei820/appconfig/utils"
 	"strings"
+	"github.com/zhwei820/appconfig/utils/redisp"
+	"github.com/gomodule/redigo/redis"
+	"github.com/rs/zerolog/log"
 )
 
 func BaseInit() {
@@ -40,8 +43,19 @@ func authFilter() {
 			valid, _ := et.ValidateToken(authtoken, 0)
 			if !valid {
 				ctx.WriteString("未授权")
+				return
 			}
-			et.GetUserId(authtoken)
+			userId := et.GetUserId(authtoken)
+
+			c := redisp.CachePool.Get()
+			res, err := redis.Int(c.Do("GET", userId))
+			if err != nil {
+				log.Error().Msg(err.Error())
+			}
+			if !(res > 0) {
+				ctx.WriteString("未授权")
+				return
+			}
 
 			// // session base validation
 			//uid := ctx.Input.CruSession.Get("uid")

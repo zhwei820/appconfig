@@ -7,7 +7,11 @@ import (
 	. "github.com/zhwei820/appconfig/services/base_service"
 	. "github.com/zhwei820/appconfig/utils/error_define"
 	"github.com/zhwei820/appconfig/services/staffuser_service"
+	"github.com/zhwei820/appconfig/utils/redisp"
 	"github.com/bitly/go-simplejson"
+	"github.com/rs/zerolog/log"
+	"fmt"
+	"strconv"
 )
 
 var (
@@ -87,6 +91,13 @@ func (this *AuthController) ApiLogin() {
 		this.WriteJsonWithStatusCode(500, ErrorUnkown.Code, err.Error())
 		return
 	}
+
+	c := redisp.CachePool.Get()
+	_, err = c.Do("SET", user.Id, 1)
+	if err != nil {
+		log.Error().Msg(fmt.Sprintf("user_token_error: username: %s id: %s; %s", user.Username, strconv.Itoa(int(user.Id)), err.Error()))
+	}
+
 	this.WriteJson(LoginToken{user, token})
 }
 
