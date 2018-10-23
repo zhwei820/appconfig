@@ -33,6 +33,8 @@ func corsFilter() {
 
 func authFilter() {
 	var FilterUser = func(ctx *context.Context) {
+		RequestCounter.Inc() // prom count stat
+
 		test := beego.AppConfig.String("test")
 		if test != "true" { // test 不验证token
 

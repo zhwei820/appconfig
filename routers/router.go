@@ -11,6 +11,7 @@ import (
 
 	"github.com/zhwei820/appconfig/services/staffuser_service"
 	"github.com/zhwei820/appconfig/services/auth_service"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // @APIVersion 1.0.0
@@ -42,4 +43,5 @@ func init() {
 
 	)
 	beego.AddNamespace(ns)
+	beego.Handler("/metrics", promhttp.Handler())
 }
