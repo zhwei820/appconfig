@@ -42,7 +42,7 @@ func authFilter() {
 			et := utils.EasyToken{}
 			authtoken := strings.TrimSpace(ctx.Request.Header.Get("Authorization"))
 
-			valid, _ := et.ValidateToken(authtoken, 0) // useless
+			valid, _ := et.ValidateToken(authtoken, 0)
 			if !valid {
 				ctx.ResponseWriter.WriteHeader(401)
 				ctx.WriteString("未授权")
