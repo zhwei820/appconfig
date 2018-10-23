@@ -4,4 +4,7 @@ import (
 	"github.com/astaxie/beego"
 )
 
-var CachePool = NewRedisPool(beego.AppConfig.String("cache_redis"), beego.AppConfig.String("cache_redis"), 1)
+var (
+	db, _     = beego.AppConfig.Int("cache_redis_db")
+	CachePool = NewRedisPool(beego.AppConfig.String("cache_redis_url"), beego.AppConfig.String("cache_redis_password"), db) // cache_redis
+)

@@ -25,6 +25,9 @@ func init() {
 	beego.Router("/", &default_service.DefaultController{}, "*:ApiGetAll")
 	beego.Router("/register", &auth_service.AuthController{}, "post:ApiRegister")
 	beego.Router("/api_login", &auth_service.AuthController{}, "post:ApiLogin")
+	beego.Router("/api_logout", &auth_service.AuthController{}, "post:ApiLogout")
+	beego.Router("/auth", &auth_service.AuthController{}, "get:ApiAuth")
+
 	beego.Router("/login", &auth_service.AuthController{}, "post:SessionLogin")
 	beego.Router("/logout", &auth_service.AuthController{}, "post:SessionLogout")
 

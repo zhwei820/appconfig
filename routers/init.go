@@ -42,19 +42,25 @@ func authFilter() {
 			et := utils.EasyToken{}
 			authtoken := strings.TrimSpace(ctx.Request.Header.Get("Authorization"))
 
-			valid, _ := et.ValidateToken(authtoken, 0)
+			valid, _ := et.ValidateToken(authtoken, 0) // useless
 			if !valid {
+				ctx.ResponseWriter.WriteHeader(401)
 				ctx.WriteString("未授权")
 				return
 			}
-			userId := et.GetUserId(authtoken)
+			//userId := et.GetUserId(authtoken)
+			//if userId == 0 {
+			//	ctx.WriteString("未授权")
+			//	return
+			//}
 
-			c := redisp.CachePool.Get()
-			res, err := redis.Int(c.Do("GET", userId))
+			c := redisp.CachePool.Get() // get redis session
+			res, err := redis.Bytes(c.Do("GET", authtoken))
 			if err != nil {
 				log.Error().Msg(err.Error())
 			}
-			if !(res > 0) {
+			if len(res) == 0 {
+				ctx.ResponseWriter.WriteHeader(401)
 				ctx.WriteString("未授权")
 				return
 			}

@@ -11,7 +11,8 @@ import (
 	"github.com/bitly/go-simplejson"
 	"github.com/rs/zerolog/log"
 	"fmt"
-	"strconv"
+	"github.com/gomodule/redigo/redis"
+	"encoding/json"
 )
 
 var (
@@ -82,23 +83,32 @@ func (this *AuthController) ApiLogin() {
 		this.WriteJsonWithStatusCode(403, ErrUsernameOrPasswd.Code, ErrUsernameOrPasswd.Msg)
 		return
 	}
-	et := utils.EasyToken{
-		Uid:     user.Id,
-		Expires: utils.GetExpireTime(),
-	}
-	token, err := et.GetToken()
+	token, err := genTokenAndSave(user) // 获取token
+
 	if err != nil {
 		this.WriteJsonWithStatusCode(500, ErrorUnkown.Code, err.Error())
 		return
 	}
 
-	c := redisp.CachePool.Get()
-	_, err = c.Do("SET", user.Id, 1)
-	if err != nil {
-		log.Error().Msg(fmt.Sprintf("user_token_error: username: %s id: %s; %s", user.Username, strconv.Itoa(int(user.Id)), err.Error()))
-	}
-
 	this.WriteJson(LoginToken{user, token})
+}
+
+// @Summary 登出
+// @Description 账号登出接口
+// @Success 200 {string}
+// @Failure 401 No Admin
+// @router /api_logout [post]
+// @Security jwt
+func (this *AuthController) ApiLogout() {
+	authtoken := strings.TrimSpace(this.Ctx.Request.Header.Get("Authorization"))
+
+	c := redisp.CachePool.Get() // set redis session
+	_, err := c.Do("DEL", authtoken)
+	if err != nil {
+		log.Error().Msg(fmt.Sprintf("log out error:  %s", err.Error()))
+	}
+	this.WriteJson("logout")
+
 }
 
 // @Summary 注册
@@ -123,11 +133,55 @@ func (this *AuthController) ApiAuth() {
 	et := utils.EasyToken{}
 	authtoken := strings.TrimSpace(this.Ctx.Request.Header.Get("Authorization"))
 
+	res := this.getTokenData(authtoken)
+	if len(res) == 0 {
+		return // 未授权
+	}
+
 	valid, err := et.ValidateToken(authtoken, 0)
 	if !valid {
 		this.WriteJsonWithStatusCode(401, ErrorUnkown.Code, err.Error())
 		return
 	}
 	this.WriteJson("is login")
+
+}
+
+// @Summary 刷新token
+// @Description 刷新token
+// @Success 200 {string}
+// @Failure 401 unauthorized
+// @router /token_refresh [get]
+// @Security jwt
+func (this *AuthController) ApiTokenRefresh() {
+	authtoken := strings.TrimSpace(this.Ctx.Request.Header.Get("Authorization"))
+
+	res := this.getTokenData(authtoken)
+	if len(res) == 0 {
+		return // 未授权
+	}
+	var user models.StaffUser
+	json.Unmarshal(res, &user)
+
+	token, err := genTokenAndSave(user) // 获取token
+	if err != nil {
+		log.Error().Msg(fmt.Sprintf("log out error:  %s", err.Error()))
+	}
+	this.WriteJson(LoginToken{user, token})
+
+}
+
+// 根据token获取用户信息
+func (this *AuthController) getTokenData(authtoken string) []byte {
+	c := redisp.CachePool.Get() // get redis session
+	res, err := redis.Bytes(c.Do("GET", authtoken))
+	if err != nil {
+		log.Error().Msg(err.Error())
+	}
+	if len(res) == 0 {
+		this.Ctx.ResponseWriter.WriteHeader(401)
+		this.Ctx.WriteString("未授权")
+	}
+	return res
 
 }
