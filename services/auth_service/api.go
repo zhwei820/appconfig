@@ -160,6 +160,13 @@ func (this *AuthController) ApiTokenRefresh() {
 	if len(res) == 0 {
 		return // 未授权
 	}
+
+	c := redisp.CachePool.Get() // set redis session
+	_, err := c.Do("DEL", authtoken)
+	if err != nil {
+		log.Error().Msg(fmt.Sprintf("log out error:  %s", err.Error()))
+	}
+
 	var user models.StaffUser
 	json.Unmarshal(res, &user)
 
