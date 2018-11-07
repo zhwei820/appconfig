@@ -8,8 +8,8 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/zhwei820/appconfig/models"
-	"github.com/gin-gonic/gin/json"
 	"github.com/zhwei820/appconfig/utils/define"
+	"encoding/json"
 )
 
 // 生成 jwt token, 保存到redis

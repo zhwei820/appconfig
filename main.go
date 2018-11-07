@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"fmt"
 )
 
 func main() {
@@ -31,7 +32,7 @@ func main() {
 	}
 	orm.DefaultTimeLoc = time.UTC
 	beego.BConfig.ServerName = "snail server 1.0"
-
+	fmt.Println("server listen at: ", beego.AppConfig.String("httpport"))
 	beego.Run()
 
 }
