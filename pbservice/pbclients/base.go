@@ -9,9 +9,9 @@ import (
 )
 
 type ClientRpcs struct {
-	Idx       uint64
-	DownIdx   uint64
-	DownPos   uint64
+	Idx       int64
+	DownIdx   int64
+	DownPos   int64
 	Mutex     sync.RWMutex
 	Clients   []*rpc.HTTPClient
 	Services  []interface{}
@@ -31,18 +31,18 @@ func CreateNewInstance() *ClientRpcs {
 	}
 }
 
-func (c *ClientRpcs) GetService() (svc interface{}, idx, pos uint64, err error) {
+func (c *ClientRpcs) GetService() (svc interface{}, idx, pos int64, err error) {
 	// get svc instance by load balance
 	// you can use any load balance algorithm what you want.
 
 	if len(c.Services) > 0 {
 		c.switchService()
-		pos := atomic.LoadUint64(&(c.Idx)) % uint64(len(c.Services))
-		if pos == atomic.LoadUint64(&(c.DownIdx)) {
+		pos := atomic.LoadInt64(&(c.Idx)) % int64(len(c.Services))
+		if pos == atomic.LoadInt64(&(c.DownIdx)) {
 			c.switchService()
-			pos = atomic.LoadUint64(&(c.Idx)) % uint64(len(c.Services))
+			pos = atomic.LoadInt64(&(c.Idx)) % int64(len(c.Services))
 		}
-		if c.Idx > c.DownIdx+uint64(c.skipTimes) { // 尝试将这个节点恢复
+		if c.Idx > c.DownIdx+int64(c.skipTimes) { // 尝试将这个节点恢复
 			c.BringUpService()
 		}
 		return c.Services[pos], c.Idx, pos, nil
@@ -52,17 +52,17 @@ func (c *ClientRpcs) GetService() (svc interface{}, idx, pos uint64, err error) 
 }
 
 func (c *ClientRpcs) switchService() {
-	atomic.AddUint64(&c.Idx, 1)
+	atomic.AddInt64(&c.Idx, 1)
 }
 
-func (c *ClientRpcs) KnockdownService(idx, pos uint64) {
+func (c *ClientRpcs) KnockdownService(idx, pos int64) {
 	// 暂时将这个节点移除
-	atomic.StoreUint64(&c.DownIdx, idx)
-	atomic.StoreUint64(&c.DownPos, pos)
+	atomic.StoreInt64(&c.DownIdx, idx)
+	atomic.StoreInt64(&c.DownPos, pos)
 }
 
 func (c *ClientRpcs) BringUpService() {
 	// 将这个节点恢复
-	atomic.StoreUint64(&c.DownIdx, -1)
-	atomic.StoreUint64(&c.DownPos, -1)
+	atomic.StoreInt64(&c.DownIdx, -1)
+	atomic.StoreInt64(&c.DownPos, -1)
 }

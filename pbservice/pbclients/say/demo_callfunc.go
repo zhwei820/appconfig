@@ -12,6 +12,7 @@ import (
 )
 
 func SayRpc(clientRpcs *pbclients.ClientRpcs, name string, input []byte) (res []byte, err error) {
+	flag:=1
 	for ii := 0; ii <= 1; ii++ {
 		svc, idx, pos, _ := clientRpcs.GetService() // 远程方法实例
 		if svc == nil {
@@ -23,6 +24,10 @@ func SayRpc(clientRpcs *pbclients.ClientRpcs, name string, input []byte) (res []
 		if err != nil {
 			if strings.Contains(err.Error(), "connect") {
 				clientRpcs.KnockdownService(idx, pos)
+				flag +=1
+				if flag <=2{
+					continue
+				}
 			}
 			log.Printf("%v", err)
 		}
