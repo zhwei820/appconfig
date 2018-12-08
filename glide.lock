@@ -16,13 +16,6 @@ imports:
   - toolbox
   - utils
   - validation
-- name: github.com/Bilibili/discovery
-  version: a31fc879e8c5f21b710b84ff86bdf3a4fe84075e
-  subpackages:
-  - errors
-  - lib/http
-  - lib/time
-  - naming
 - name: github.com/bitly/go-simplejson
   version: aabad6e819789e569bd6aabf444c935aa9ba1e44
 - name: github.com/certifi/gocertifi

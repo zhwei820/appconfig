@@ -5,7 +5,6 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"time"
-	"github.com/zhwei820/appconfig/utils/rpc_register"
 	"github.com/zhwei820/appconfig/utils/util"
 	"github.com/rs/zerolog/log"
 	"os"
@@ -39,5 +38,4 @@ func main() {
 func destroy() {
 	log.Info().Msg("清除资源")
 	util.Destroy()
-	rpc_register.Cancel() // 取消注册 DiscoveryRegister
 }
