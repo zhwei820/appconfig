@@ -11,6 +11,7 @@ import (
 
 	"github.com/zhwei820/appconfig/services/staffuser_service"
 	"github.com/zhwei820/appconfig/services/auth_service"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 // @APIVersion 1.0.0
@@ -24,6 +25,10 @@ func init() {
 	beego.Router("/", &default_service.DefaultController{}, "*:ApiGetAll")
 	beego.Router("/register", &auth_service.AuthController{}, "post:ApiRegister")
 	beego.Router("/api_login", &auth_service.AuthController{}, "post:ApiLogin")
+	beego.Router("/api_logout", &auth_service.AuthController{}, "post:ApiLogout")
+	beego.Router("/auth", &auth_service.AuthController{}, "get:ApiAuth")
+	beego.Router("/token_refresh", &auth_service.AuthController{}, "get:ApiTokenRefresh")
+
 	beego.Router("/login", &auth_service.AuthController{}, "post:SessionLogin")
 	beego.Router("/logout", &auth_service.AuthController{}, "post:SessionLogout")
 
@@ -42,4 +47,5 @@ func init() {
 
 	)
 	beego.AddNamespace(ns)
+	beego.Handler("/metrics", promhttp.Handler())
 }

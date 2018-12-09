@@ -316,6 +316,28 @@
                 }
             }
         },
+        "/api_logout": {
+            "post": {
+                "tags": [
+                    "auth_serviceAuthController"
+                ],
+                "summary": "登出",
+                "description": "账号登出接口",
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    },
+                    "401": {
+                        "description": "No Admin"
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
+            }
+        },
         "/auth": {
             "get": {
                 "tags": [
@@ -413,6 +435,28 @@
                         "description": "No Admin"
                     }
                 }
+            }
+        },
+        "/token_refresh": {
+            "get": {
+                "tags": [
+                    "auth_serviceAuthController"
+                ],
+                "summary": "刷新token",
+                "description": "刷新token",
+                "responses": {
+                    "200": {
+                        "description": "{string}"
+                    },
+                    "401": {
+                        "description": "unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "jwt": []
+                    }
+                ]
             }
         }
     },

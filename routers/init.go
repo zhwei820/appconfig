@@ -33,6 +33,8 @@ func corsFilter() {
 
 func authFilter() {
 	var FilterUser = func(ctx *context.Context) {
+		RequestCounter.Inc() // prom count stat
+
 		test := beego.AppConfig.String("test")
 		if test != "true" { // test 不验证token
 
@@ -42,17 +44,23 @@ func authFilter() {
 
 			valid, _ := et.ValidateToken(authtoken, 0)
 			if !valid {
+				ctx.ResponseWriter.WriteHeader(401)
 				ctx.WriteString("未授权")
 				return
 			}
-			userId := et.GetUserId(authtoken)
+			//userId := et.GetUserId(authtoken)
+			//if userId == 0 {
+			//	ctx.WriteString("未授权")
+			//	return
+			//}
 
-			c := redisp.CachePool.Get()
-			res, err := redis.Int(c.Do("GET", userId))
+			c := redisp.CachePool.Get() // get redis session
+			res, err := redis.Bytes(c.Do("GET", authtoken))
 			if err != nil {
 				log.Error().Msg(err.Error())
 			}
-			if !(res > 0) {
+			if len(res) == 0 {
+				ctx.ResponseWriter.WriteHeader(401)
 				ctx.WriteString("未授权")
 				return
 			}
