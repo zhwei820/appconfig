@@ -1,7 +1,7 @@
 package sing
 
 import (
-	"github.com/zhwei820/appconfig/pbservice/pb/appconfig/sing"
+	"github.com/zhwei820/appconfig/pbservice/pb/sing"
 )
 func SingHello(in []byte) ([]byte, error) {
 	args := &sing.SingInput{}

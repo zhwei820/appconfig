@@ -1,15 +1,35 @@
 package say
 
 import (
-	"github.com/zhwei820/appconfig/pbservice/pbclients"
+	"github.com/astaxie/beego"
+	"github.com/hprose/hprose-golang/rpc"
+	"github.com/zhwei820/BasePbClient"
 	"strings"
-	_ "github.com/zhwei820/appconfig/utils/gotests"
-	_ "github.com/zhwei820/appconfig/routers"
-
-	"log"
 	"errors"
-	"github.com/zhwei820/appconfig/pbservice/pb/appconfig/say"
+	"github.com/rs/zerolog/log"
 )
+
+var SayClientRpc *pbclients.ClientRpcs
+
+func CreateNewRpcClients(remoteSvcUrlsKey string) * pbclients.ClientRpcs {
+	rpcUrls := beego.AppConfig.DefaultString(remoteSvcUrlsKey, "")
+	rpcUrlList := strings.Split(rpcUrls, ";")
+	clientRpc:= pbclients.CreateNewInstance()
+	for _, rpcUrl := range rpcUrlList{
+		rpclient := rpc.NewHTTPClient(rpcUrl)
+		clientRpc.Clients = append(clientRpc.Clients, rpclient)
+
+		var sayService *SayService // replace this
+		rpclient.UseService(&sayService)
+		clientRpc.Services = append(clientRpc.Services, sayService)
+	}
+	return clientRpc
+}
+
+func init()  {
+	SayClientRpc = CreateNewRpcClients("rpc_urls")
+}
+
 
 func SayRpc(clientRpcs *pbclients.ClientRpcs, name string, input []byte) (res []byte, err error) {
 	flag:=1
@@ -37,7 +57,7 @@ func SayRpc(clientRpcs *pbclients.ClientRpcs, name string, input []byte) (res []
 }
 
 func CallSayHello(svc interface{}, input []byte) ([]byte, error) {
-	res, err := svc.(*say.SayService).SayHello(input)
+	res, err := svc.(*SayService).SayHello(input)
 	return res, err
 }
 

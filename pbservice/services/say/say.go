@@ -1,7 +1,7 @@
 package say
 
 import (
-	"github.com/zhwei820/appconfig/pbservice/pb/appconfig/say"
+	"github.com/zhwei820/appconfig/pbservice/pb/say"
 )
 
 func SayHello(in []byte) ([]byte, error) {
