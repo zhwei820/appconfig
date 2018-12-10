@@ -16,7 +16,7 @@ import (
 
 var SayClientRpc *pbclients.ClientRpcs
 
-func CreateNewRpcClients(remoteSvcUrlsKey string) * pbclients.ClientRpcs {
+func CreateNewSayRpcClients(remoteSvcUrlsKey string) * pbclients.ClientRpcs {
 	rpcUrls := beego.AppConfig.DefaultString(remoteSvcUrlsKey, "")
 	rpcUrlList := strings.Split(rpcUrls, ";")
 	clientRpc:= pbclients.CreateNewInstance()
@@ -32,7 +32,7 @@ func CreateNewRpcClients(remoteSvcUrlsKey string) * pbclients.ClientRpcs {
 }
 
 func init()  {
-	SayClientRpc = CreateNewRpcClients("sayrpc_urls")
+	SayClientRpc = CreateNewSayRpcClients("sayrpc_urls")
 }
 
 
