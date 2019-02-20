@@ -1,13 +1,13 @@
 package auth_service
 
 import (
-	"github.com/zhwei820/appconfig/models"
-	"github.com/zhwei820/appconfig/utils"
+	"github.com/zhwei820/natsmicro/models"
+	"github.com/zhwei820/natsmicro/utils"
 	"strings"
-	. "github.com/zhwei820/appconfig/services/base_service"
-	. "github.com/zhwei820/appconfig/utils/error_define"
-	"github.com/zhwei820/appconfig/services/staffuser_service"
-	"github.com/zhwei820/appconfig/utils/redisp"
+	. "github.com/zhwei820/natsmicro/services/base_service"
+	. "github.com/zhwei820/natsmicro/utils/error_define"
+	"github.com/zhwei820/natsmicro/services/staffuser_service"
+	"github.com/zhwei820/natsmicro/utils/redisp"
 	"github.com/bitly/go-simplejson"
 	"github.com/rs/zerolog/log"
 	"fmt"

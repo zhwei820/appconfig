@@ -2,7 +2,7 @@ package staffuser_service
 
 import (
 	"github.com/astaxie/beego/validation"
-	. "github.com/zhwei820/appconfig/utils/error_define"
+	. "github.com/zhwei820/natsmicro/utils/error_define"
 )
 
 func (this *StaffUserController) validateRegister(username, password, email string) error {

@@ -1,11 +1,11 @@
 package {{ model_data.obj }}_service
 
 import (
-	"back/appconfig/models"
-	. "back/appconfig/services/base_service"
+	"back/natsmicro/models"
+	. "back/natsmicro/services/base_service"
 	"strconv"
 	"github.com/astaxie/beego"
-	. "back/appconfig/utils/error_define"
+	. "back/natsmicro/utils/error_define"
 )
 
 type {{ model_data.objBig }}Controller struct {

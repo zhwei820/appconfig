@@ -5,9 +5,9 @@ RUN apt-get update && apt-get -y install supervisor
 RUN mkdir -p /data
 WORKDIR /data
 
-ADD ./appconfig /data
+ADD ./natsmicro /data
 ADD ./supervisord.conf /etc/supervisord.conf
-ONBUILD ADD ./appconfig /data
+ONBUILD ADD ./natsmicro /data
 ONBUILD ADD ./supervisord.conf /etc/supervisord.conf
 
 

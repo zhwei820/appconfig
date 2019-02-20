@@ -2,7 +2,7 @@ package staffuser_service
 
 import (
 	"github.com/astaxie/beego/orm"
-	"github.com/zhwei820/appconfig/models"
+	"github.com/zhwei820/natsmicro/models"
 )
 // 用户列表筛选
 func (this *StaffUserController) ListFilterQs() orm.QuerySeter {

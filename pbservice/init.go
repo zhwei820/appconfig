@@ -1,19 +1,31 @@
 package pbservice
 
 import (
-	"github.com/hprose/hprose-golang/rpc"
-	"github.com/astaxie/beego"
-	"github.com/zhwei820/appconfig/utils/define"
-	. "github.com/zhwei820/appconfig/pb/appconfig/sing"
-	. "github.com/zhwei820/appconfig/pb/appconfig/say"
-	"github.com/zhwei820/appconfig/pbservice/sing"
-	"github.com/zhwei820/appconfig/pbservice/say"
+	"fmt"
+	"github.com/nats-io/go-nats"
+	"github.com/rs/zerolog/log"
 )
 
-func init() {
+var NatsConn *nats.Conn
 
-	service := rpc.NewHTTPService()
-	service.AddInstanceMethods(SayService{SayHello: say.SayHello}, rpc.Options{Simple: true})
-	service.AddInstanceMethods(SingService{SingHello: sing.SingHello}, rpc.Options{Simple: true})
-	beego.Handler(define.DiscoveryUrlPrefix, service)
+func init() {
+	NatsConn, _ = nats.Connect(nats.DefaultURL)
+
+	go natsServer()
+}
+
+func natsServer() {
+
+	for subkey, fun := range ServiceConfig {
+		var fun = fun // go trap
+		NatsConn.Subscribe(subkey, func(m *nats.Msg) {
+			out, err := fun(m.Data)
+			if err != nil {
+				log.Info().Msg(fmt.Sprintf("%v", err.Error()))
+			}
+			NatsConn.Publish(m.Reply, out)
+		})
+	}
+	println("Nats Server init done!")
+	select {}
 }

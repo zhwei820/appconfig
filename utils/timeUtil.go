@@ -2,7 +2,7 @@ package utils
 
 import (
 	"time"
-	"github.com/zhwei820/appconfig/utils/define"
+	"github.com/zhwei820/natsmicro/utils/define"
 )
 
 func GetExpireTime() int64 {

@@ -1,7 +1,7 @@
 package base_service
 
 import (
-	"github.com/zhwei820/appconfig/utils"
+	"github.com/zhwei820/natsmicro/utils"
 	"strings"
 )
 

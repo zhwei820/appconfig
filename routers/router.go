@@ -1,17 +1,16 @@
 package routers
 
 import (
-	_ "github.com/zhwei820/appconfig/utils/util"
-	_ "github.com/zhwei820/appconfig/pbservice"
+	_ "github.com/zhwei820/natsmicro/utils/util"
 
 	"github.com/astaxie/beego"
-	"github.com/zhwei820/appconfig/services/default_service"
-	"github.com/zhwei820/appconfig/services/group_service"
 	_ "github.com/astaxie/beego/session/redis"
+	"github.com/zhwei820/natsmicro/services/default_service"
+	"github.com/zhwei820/natsmicro/services/group_service"
 
-	"github.com/zhwei820/appconfig/services/staffuser_service"
-	"github.com/zhwei820/appconfig/services/auth_service"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/zhwei820/natsmicro/services/auth_service"
+	"github.com/zhwei820/natsmicro/services/staffuser_service"
 )
 
 // @APIVersion 1.0.0

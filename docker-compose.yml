@@ -4,9 +4,9 @@ services:
 # ========== dev or test ================
 
   web:
-    image: appconfig:debug
+    image: natsmicro:debug
     restart: always
-    command: ./appconfig
+    command: ./natsmicro
     volumes:
       - ./data/static:/data/data/static
       - ./data/log/:/data/data/log
@@ -22,14 +22,14 @@ services:
     external_links:
       - "product_mysql:mysql"
       - "product_redis:redis"
-    container_name: appconfig_web
+    container_name: natsmicro_web
     sysctls:
       net.core.somaxconn: 163840
 
 # ========== prod ================
 
   prod:
-    image: appconfig:release
+    image: natsmicro:release
     restart: always
     command: supervisord -c /etc/supervisord.conf
     volumes:

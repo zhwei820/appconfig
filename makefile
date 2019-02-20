@@ -19,7 +19,7 @@ clean:
 
 rundev: build
 	bee generate docs
-	./appconfig
+	./natsmicro
 
 # 测试
 test:

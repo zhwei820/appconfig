@@ -4,7 +4,7 @@ import (
 	"runtime"
 	"path/filepath"
 	"github.com/astaxie/beego"
-	"github.com/zhwei820/appconfig/utils"
+	"github.com/zhwei820/natsmicro/utils"
 
 	_ "github.com/astaxie/beego/session/redis"
 )

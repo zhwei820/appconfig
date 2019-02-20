@@ -1,14 +1,14 @@
 package auth_service
 
 import (
-	"github.com/zhwei820/appconfig/utils"
+	"github.com/zhwei820/natsmicro/utils"
 	"fmt"
 	"strconv"
-	"github.com/zhwei820/appconfig/utils/redisp"
+	"github.com/zhwei820/natsmicro/utils/redisp"
 	"github.com/rs/zerolog/log"
 
-	"github.com/zhwei820/appconfig/models"
-	"github.com/zhwei820/appconfig/utils/define"
+	"github.com/zhwei820/natsmicro/models"
+	"github.com/zhwei820/natsmicro/utils/define"
 	"encoding/json"
 )
 

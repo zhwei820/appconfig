@@ -530,11 +530,11 @@
     },
     "tags": [
         {
-            "name": "github.com/zhwei820/appconfig/services/default_serviceDefaultController",
+            "name": "github.com/zhwei820/natsmicro/services/default_serviceDefaultController",
             "description": "Operations about object\n"
         },
         {
-            "name": "github.com/zhwei820/appconfig/services/default_serviceDefaultController",
+            "name": "github.com/zhwei820/natsmicro/services/default_serviceDefaultController",
             "description": "Operations about object\n"
         }
     ]

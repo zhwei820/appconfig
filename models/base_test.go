@@ -1,13 +1,13 @@
 package models
 
 import (
-	_ "github.com/zhwei820/appconfig/utils/gotests"
+	_ "github.com/zhwei820/natsmicro/utils/gotests"
 
 	"testing"
 	"github.com/astaxie/beego/orm"
 	"github.com/pkg/errors"
 
-	"github.com/zhwei820/appconfig/utils/random"
+	"github.com/zhwei820/natsmicro/utils/random"
 )
 
 func TestTransaction(t *testing.T) {

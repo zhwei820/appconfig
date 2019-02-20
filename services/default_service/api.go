@@ -1,7 +1,7 @@
 package default_service
 
 import (
-	. "github.com/zhwei820/appconfig/services/base_service"
+	. "github.com/zhwei820/natsmicro/services/base_service"
 )
 
 // Operations about object

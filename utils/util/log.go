@@ -1,15 +1,15 @@
 package util
 
 import (
-	"time"
-	"os"
-	"io"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"io"
+	"os"
+	"time"
 
-	"github.com/astaxie/beego/logs"
-	"github.com/astaxie/beego"
 	"fmt"
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"path/filepath"
 	"strings"
 )
@@ -22,10 +22,10 @@ func init() {
 
 func makeLogDir(fname string) {
 	sl := strings.Split(fname, "/")
-	path := filepath.Join(sl[0: len(sl)-1]...)
+	path := filepath.Join(sl[0 : len(sl)-1]...)
 	err := os.MkdirAll(path, 0777)
 	if err != nil {
-		logs.Error("mkdir error; %v; %v", path, err)
+		logs.Error("mkdir error %v; %v", path, err)
 	}
 
 }
@@ -61,7 +61,6 @@ func initLogRotate(fname string) {
 	}()
 
 }
-
 
 // 清除未释放资源
 func Destroy() {

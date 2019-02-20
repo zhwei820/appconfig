@@ -3,7 +3,7 @@ package models
 import (
 	"github.com/astaxie/beego/orm"
 	"time"
-	"github.com/zhwei820/appconfig/utils"
+	"github.com/zhwei820/natsmicro/utils"
 	"github.com/astaxie/beego/logs"
 	"fmt"
 	"strings"

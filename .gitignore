@@ -1,4 +1,4 @@
-appconfig
+natsmicro
 /lastupdate.tmp
 /*.tmp
 .idea
@@ -6,7 +6,7 @@ appconfig
 *.log
 data
 vendor
-deploy/appconfig
+deploy/natsmicro
 ui/node_modules
 
 build

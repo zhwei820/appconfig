@@ -1,11 +1,11 @@
 package group_service
 
 import (
-	"github.com/zhwei820/appconfig/models"
-	. "github.com/zhwei820/appconfig/services/base_service"
+	"github.com/zhwei820/natsmicro/models"
+	. "github.com/zhwei820/natsmicro/services/base_service"
 	"strconv"
 	"github.com/astaxie/beego"
-	. "github.com/zhwei820/appconfig/utils/error_define"
+	. "github.com/zhwei820/natsmicro/utils/error_define"
 )
 
 type GroupController struct {

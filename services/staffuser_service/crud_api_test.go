@@ -1,18 +1,18 @@
 package staffuser_service_test
 
 import (
-	_ "github.com/zhwei820/appconfig/utils/gotests"
+	_ "github.com/zhwei820/natsmicro/utils/gotests"
 
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	_ "github.com/zhwei820/appconfig/routers"
+	_ "github.com/zhwei820/natsmicro/routers"
 	"github.com/astaxie/beego"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/bitly/go-simplejson"
 	"fmt"
 	"bytes"
-	"github.com/zhwei820/appconfig/utils/random"
+	"github.com/zhwei820/natsmicro/utils/random"
 	"io"
 )
 
